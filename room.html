@@ -38,30 +38,30 @@
     }
 
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); transition: 0.3s; }
-    
     .logo-font { font-family: 'Outfit', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
 
     header { background: var(--bg-header); padding: 14px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 0 var(--card-border); position: sticky; top: 0; z-index: 100; }
-    header h2 { margin: 0; font-size: 20px; color: var(--btn-border); }
-
+    
     .btn { 
       padding: 10px 22px; border-radius: 8px; border: 1.5px solid var(--btn-border); background: transparent; 
       color: var(--btn-text); font-weight: 600; font-size: 13px; text-decoration: none; transition: 0.3s; 
-      display: inline-block; cursor: pointer; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px;
+      display: inline-block; cursor: pointer; text-align: center; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px;
     }
     .btn:hover { background: var(--btn-hover-bg); color: var(--btn-hover-text); transform: translateY(-2px); }
     .btn-secondary { background: transparent; border-color: var(--card-border); color: var(--text-muted); }
-    .btn-danger { border-color: #ef4444; color: #ef4444; margin-top: 50px; }
+    .btn-danger { border-color: #ef4444; color: #ef4444; }
     .btn-danger:hover { background: #ef4444; color: white; }
+    .btn-sm { padding: 6px 14px; font-size: 11px; }
 
     .product-container { max-width: 1200px; margin: 40px auto; padding: 0 5%; display: grid; grid-template-columns: 1.1fr 1fr; gap: 60px; }
     
+    /* --- GALLERY --- */
     .gallery-container { display: flex; flex-direction: column; gap: 16px; }
     .main-image-wrapper { 
       background: var(--card-bg); border-radius: 28px; border: 1px solid var(--card-border); 
       display: flex; align-items: center; justify-content: center; height: 500px; position: relative; overflow: hidden;
     }
-    .main-image-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; }
+    .main-image-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
     .nav-arrow {
       position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.2);
@@ -74,23 +74,19 @@
     .arrow-right { right: 20px; }
 
     .thumbnail-row { display: flex; gap: 12px; overflow-x: auto; padding: 5px; }
-    .thumb-img { width: 75px; height: 75px; object-fit: cover; border-radius: 14px; cursor: pointer; opacity: 0.5; border: 2px solid transparent; transition: 0.3s; }
+    .thumb-wrapper { position: relative; flex-shrink: 0; }
+    .thumb-img { width: 75px; height: 75px; object-fit: cover; border-radius: 14px; cursor: pointer; opacity: 0.6; border: 2px solid transparent; transition: 0.3s; }
     .thumb-img.active { border-color: var(--btn-border); opacity: 1; transform: translateY(-3px); }
+    
+    .delete-thumb { 
+        position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; width: 20px; height: 20px; 
+        border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; border: 2px solid var(--bg-main);
+    }
+    .thumb-wrapper:hover .delete-thumb { display: flex; }
 
     /* --- EDITABLE STYLES --- */
     .editable-group { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; margin-bottom: 5px; }
-    
-    /* Slick Pencil Icon Style */
-    .edit-icon { 
-      cursor: pointer; 
-      width: 16px; 
-      height: 16px; 
-      opacity: 0; 
-      transition: 0.2s; 
-      color: var(--text-muted); 
-      display: none; 
-      flex-shrink: 0;
-    }
+    .edit-icon { cursor: pointer; width: 16px; height: 16px; opacity: 0; transition: 0.2s; color: var(--text-muted); display: none; }
     .editable-group:hover .edit-icon { opacity: 0.7; }
     .edit-icon:hover { color: var(--accent); opacity: 1 !important; }
 
@@ -109,12 +105,12 @@
 
     .description { font-size: 16px; line-height: 1.8; white-space: pre-wrap; color: var(--text-muted); margin-top: 10px; }
 
-    .institute-box { border: 1px solid var(--card-border); border-radius: 16px; padding: 15px; margin-bottom: 30px; background: var(--bg-main); }
-    .inst-item { display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; border-bottom: 1px solid var(--card-border); }
+    .institute-box { border: 1px solid var(--card-border); border-radius: 16px; padding: 15px; margin-bottom: 20px; background: var(--bg-main); }
+    .inst-item { display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; border-bottom: 1px solid var(--card-border); align-items: center; }
     .inst-item:last-child { border: none; }
 
     .contact-section { padding-top: 30px; border-top: 1px solid var(--card-border); margin-top: 30px; }
-    .contact-number { font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-main); margin-top: 5px; display: flex; align-items: center; gap: 10px; }
+    .contact-number { font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-main); margin-top: 5px; }
 
     @media (max-width: 768px) { .product-container { grid-template-columns: 1fr; gap: 40px; } .main-image-wrapper { height: 400px; } }
   </style>
@@ -143,21 +139,20 @@
       <button class="nav-arrow arrow-right" id="nextBtn" onclick="changeImage(1)">❯</button>
     </div>
     <div class="thumbnail-row" id="thumbnailRow"></div>
+    
+    <div id="ownerImageAction" style="display:none; margin-top:10px;">
+        <input type="file" id="newImageUpload" multiple accept="image/*" style="display:none;" onchange="handleImageUpdate(event)">
+        <button id="uploadPhotosBtn" class="btn btn-sm btn-secondary" style="width:100%" onclick="document.getElementById('newImageUpload').click()">+ UPLOAD MORE PHOTOS</button>
+    </div>
   </div>
 
   <div class="details-section">
     <div class="editable-group">
         <h1 class="product-title" id="roomTitleDisplay">Hostel Name</h1>
-        <svg class="edit-icon" onclick="startEdit('roomTitle')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>
+        <svg class="edit-icon" onclick="startEdit('roomTitle')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
         <div id="roomTitleEdit" style="display:none; width:100%;">
             <input type="text" id="roomTitleInput" class="inline-edit-input">
-            <div style="display:flex; gap:8px; margin-top:10px;">
-                <button class="btn btn-sm" onclick="saveEdit('hostel_name', 'roomTitle')">SAVE</button>
-                <button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomTitle')">CANCEL</button>
-            </div>
+            <div style="display:flex; gap:8px; margin-top:10px;"><button class="btn btn-sm" onclick="saveEdit('hostel_name', 'roomTitle')">SAVE</button><button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomTitle')">CANCEL</button></div>
         </div>
     </div>
     
@@ -168,16 +163,10 @@
 
     <div class="editable-group">
         <div class="price">₹<span id="roomRentDisplay">0</span><span style="font-size: 14px; opacity: 0.6; font-weight: 500;">/month</span></div>
-        <svg class="edit-icon" onclick="startEdit('roomRent')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>
+        <svg class="edit-icon" onclick="startEdit('roomRent')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
         <div id="roomRentEdit" style="display:none; width:100%;">
             <input type="number" id="roomRentInput" class="inline-edit-input">
-            <div style="display:flex; gap:8px; margin-top:10px;">
-                <button class="btn btn-sm" onclick="saveEdit('rent', 'roomRent')">SAVE</button>
-                <button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomRent')">CANCEL</button>
-            </div>
+            <div style="display:flex; gap:8px; margin-top:10px;"><button class="btn btn-sm" onclick="saveEdit('rent', 'roomRent')">SAVE</button><button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomRent')">CANCEL</button></div>
         </div>
     </div>
 
@@ -186,35 +175,33 @@
             <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             <span id="roomLocationDisplay">Location</span>
         </div>
-        <svg class="edit-icon" onclick="startEdit('roomLocation')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>
+        <svg class="edit-icon" onclick="startEdit('roomLocation')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
         <div id="roomLocationEdit" style="display:none; width:100%;">
             <input type="text" id="roomLocationInput" class="inline-edit-input">
-            <div style="display:flex; gap:8px; margin-top:10px;">
-                <button class="btn btn-sm" onclick="saveEdit('location', 'roomLocation')">SAVE</button>
-                <button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomLocation')">CANCEL</button>
-            </div>
+            <div style="display:flex; gap:8px; margin-top:10px;"><button class="btn btn-sm" onclick="saveEdit('location', 'roomLocation')">SAVE</button><button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomLocation')">CANCEL</button></div>
         </div>
     </div>
 
-    <h3 class="logo-font" style="font-size:13px; margin-top:20px; opacity:0.6;">NEARBY INSTITUTIONS</h3>
+    <h3 class="logo-font" style="font-size:13px; margin-top:20px; opacity:0.6; display:flex; align-items:center; gap:10px;">
+        NEARBY INSTITUTIONS
+        <svg class="edit-icon" onclick="toggleInstForm()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+    </h3>
     <div class="institute-box" id="instituteList"></div>
+    <div id="addInstForm" style="display:none; margin-bottom: 20px;">
+        <div style="display:grid; grid-template-columns: 1fr 80px; gap:8px; margin-bottom:10px;">
+            <input type="text" id="newInstName" placeholder="College Name" class="inline-edit-input">
+            <input type="number" id="newInstDist" placeholder="KM" class="inline-edit-input">
+        </div>
+        <button class="btn btn-sm btn-secondary" onclick="addInstitution()">ADD INSTITUTION</button>
+    </div>
 
     <h3 class="logo-font" style="font-size:13px; margin-top:10px; opacity:0.6;">ROOM DETAILS</h3>
     <div class="editable-group">
         <div class="description" id="roomDescriptionDisplay">Description...</div>
-        <svg class="edit-icon" onclick="startEdit('roomDescription')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-        </svg>
+        <svg class="edit-icon" onclick="startEdit('roomDescription')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
         <div id="roomDescriptionEdit" style="display:none; width:100%;">
             <textarea id="roomDescriptionInput" class="inline-edit-input" style="height:120px;"></textarea>
-            <div style="display:flex; gap:8px; margin-top:10px;">
-                <button class="btn btn-sm" onclick="saveEdit('sharing_type', 'roomDescription')">SAVE</button>
-                <button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomDescription')">CANCEL</button>
-            </div>
+            <div style="display:flex; gap:8px; margin-top:10px;"><button class="btn btn-sm" onclick="saveEdit('sharing_type', 'roomDescription')">SAVE</button><button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomDescription')">CANCEL</button></div>
         </div>
     </div>
 
@@ -225,7 +212,7 @@
       </div>
       <div class="contact-number" id="phoneNumber">--</div>
       
-      <button class="btn btn-danger btn-sm" style="width:100%; display:none; margin-top: 40px;" id="deleteBtn" onclick="deleteRoom()">REMOVE THIS LISTING</button>
+      <button class="btn btn-danger btn-sm" style="width:100%; margin-top: 40px; display:none;" id="deleteBtn" onclick="deleteRoom()">REMOVE THIS LISTING</button>
     </div>
   </div>
 </div>
@@ -235,13 +222,13 @@
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdXd4YWNhcHl5c3l1d3BtcXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODc0ODQsImV4cCI6MjA4NzI2MzQ4NH0.8dOeocJ5Q2tKy6gDu7rAmWgQqv_oetEXSGH2kWljZJo";
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  let currentRoomId, roomData;
+  let currentRoomId, roomData, currentUser;
   let currentImageIndex = 0; 
 
   async function init() {
     currentRoomId = localStorage.getItem("item_id");
     const { data: { session } } = await supabaseClient.auth.getSession();
-    const currentUser = session?.user;
+    currentUser = session?.user;
 
     const { data, error } = await supabaseClient.from("hostels").select("*").eq("id", currentRoomId).single();
     if (error) return document.getElementById("loadingMsg").innerText = "Room not found.";
@@ -250,31 +237,137 @@
     document.getElementById("loadingMsg").style.display = "none";
     document.getElementById("roomContent").style.display = "grid";
 
-    document.getElementById("roomTitleDisplay").innerText = data.hostel_name;
-    document.getElementById("roomRentDisplay").innerText = data.rent;
-    document.getElementById("roomLocationDisplay").innerText = data.location;
-    document.getElementById("roomDescriptionDisplay").innerText = data.sharing_type || "No extra details provided.";
-    document.getElementById("phoneNumber").innerText = data.contact_number;
-    document.getElementById("vacatingBadge").innerText = "Available: " + new Date(data.vacating_date).toLocaleDateString();
-    document.getElementById("foodBadge").innerText = "Food: " + data.food_status;
-    
-    const instList = document.getElementById("instituteList");
-    if(data.nearby_institutions?.length > 0) {
-      data.nearby_institutions.forEach(inst => {
-        instList.innerHTML += `<div class="inst-item"><span>🎓 ${inst.name}</span><strong>${inst.dist} km</strong></div>`;
-      });
-    } else {
-      instList.innerHTML = "<p style='font-size:13px; opacity:0.5;'>No nearby institutions listed.</p>";
-    }
-
-    renderGallery(data.image_urls);
+    updateUI();
 
     if (currentUser && currentUser.id === data.user_id) {
       document.querySelectorAll(".edit-icon").forEach(el => el.style.display = "inline");
       document.getElementById("deleteBtn").style.display = "block";
+      document.getElementById("ownerImageAction").style.display = "block";
     }
   }
 
+  function updateUI() {
+    document.getElementById("roomTitleDisplay").innerText = roomData.hostel_name;
+    document.getElementById("roomRentDisplay").innerText = roomData.rent;
+    document.getElementById("roomLocationDisplay").innerText = roomData.location;
+    document.getElementById("roomDescriptionDisplay").innerText = roomData.sharing_type || "No extra details provided.";
+    document.getElementById("phoneNumber").innerText = roomData.contact_number;
+    document.getElementById("vacatingBadge").innerText = "Available: " + new Date(roomData.vacating_date).toLocaleDateString();
+    document.getElementById("foodBadge").innerText = "Food: " + roomData.food_status;
+    
+    renderInstitutions();
+    renderGallery();
+  }
+
+  /* --- INSTITUTIONS --- */
+  function renderInstitutions() {
+    const instList = document.getElementById("instituteList");
+    instList.innerHTML = "";
+    if(roomData.nearby_institutions?.length > 0) {
+      roomData.nearby_institutions.forEach((inst, i) => {
+        instList.innerHTML += `
+            <div class="inst-item">
+                <span>🎓 ${inst.name}</span>
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <strong>${inst.dist} km</strong>
+                    ${currentUser?.id === roomData.user_id ? `<span style="color:#ef4444; cursor:pointer;" onclick="removeInstitution(${i})">-</span>` : ''}
+                </div>
+            </div>`;
+      });
+    } else {
+      instList.innerHTML = "<p style='font-size:13px; opacity:0.5;'>No nearby institutions listed.</p>";
+    }
+  }
+
+  function toggleInstForm() {
+    const form = document.getElementById('addInstForm');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  }
+
+  async function addInstitution() {
+    const name = document.getElementById('newInstName').value;
+    const dist = document.getElementById('newInstDist').value;
+    if(!name || !dist) return;
+    const newList = [...(roomData.nearby_institutions || []), { name, dist }];
+    const { error } = await supabaseClient.from("hostels").update({ nearby_institutions: newList }).eq("id", currentRoomId);
+    if(!error) { roomData.nearby_institutions = newList; renderInstitutions(); toggleInstForm(); }
+  }
+
+  async function removeInstitution(index) {
+    const newList = roomData.nearby_institutions.filter((_, i) => i !== index);
+    const { error } = await supabaseClient.from("hostels").update({ nearby_institutions: newList }).eq("id", currentRoomId);
+    if(!error) { roomData.nearby_institutions = newList; renderInstitutions(); }
+  }
+
+  /* --- GALLERY & IMAGES --- */
+  function renderGallery() {
+    const urls = roomData.image_urls || [];
+    const mainImg = document.getElementById("mainRoomImage");
+    const thumbRow = document.getElementById("thumbnailRow");
+    thumbRow.innerHTML = "";
+
+    if (urls.length === 0) {
+      mainImg.src = "https://via.placeholder.com/800x800?text=No+Images";
+      return;
+    }
+
+    document.getElementById("prevBtn").style.display = urls.length > 1 ? "flex" : "none";
+    document.getElementById("nextBtn").style.display = urls.length > 1 ? "flex" : "none";
+    mainImg.src = urls[currentImageIndex];
+
+    urls.forEach((url, i) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "thumb-wrapper";
+      wrapper.innerHTML = `
+        <img src="${url}" class="thumb-img ${i === currentImageIndex ? 'active' : ''}" onclick="currentImageIndex = ${i}; updateMainImage();">
+        ${currentUser?.id === roomData.user_id ? `<span class="delete-thumb" onclick="removeImage(${i})">-</span>` : ''}
+      `;
+      thumbRow.appendChild(wrapper);
+    });
+  }
+
+  function changeImage(direction) {
+    const urls = roomData.image_urls;
+    currentImageIndex = (currentImageIndex + direction + urls.length) % urls.length;
+    updateMainImage();
+  }
+
+  function updateMainImage() {
+    document.getElementById("mainRoomImage").src = roomData.image_urls[currentImageIndex];
+    document.querySelectorAll(".thumb-img").forEach((t, i) => t.classList.toggle("active", i === currentImageIndex));
+  }
+
+  async function handleImageUpdate(e) {
+    const files = Array.from(e.target.files);
+    const btn = document.getElementById("uploadPhotosBtn");
+    btn.innerText = "UPLOADING...";
+    
+    const newUrls = [...(roomData.image_urls || [])];
+    for (let f of files) {
+      const path = `${currentUser.id}/${Date.now()}-${f.name}`;
+      const { data } = await supabaseClient.storage.from('item-images').upload(path, f);
+      if(data) {
+        const { data: pUrl } = supabaseClient.storage.from('item-images').getPublicUrl(path);
+        newUrls.push(pUrl.publicUrl);
+      }
+    }
+    
+    const { error } = await supabaseClient.from("hostels").update({ image_urls: newUrls }).eq("id", currentRoomId);
+    if(!error) { roomData.image_urls = newUrls; renderGallery(); }
+    btn.innerText = "+ UPLOAD MORE PHOTOS";
+  }
+
+  async function removeImage(index) {
+    const newUrls = roomData.image_urls.filter((_, i) => i !== index);
+    const { error } = await supabaseClient.from("hostels").update({ image_urls: newUrls }).eq("id", currentRoomId);
+    if(!error) { 
+        roomData.image_urls = newUrls; 
+        currentImageIndex = 0;
+        renderGallery(); 
+    }
+  }
+
+  /* --- EDITING --- */
   function startEdit(fieldId) {
     document.getElementById(fieldId + "Display").style.display = "none";
     document.getElementById(fieldId + "Edit").style.display = "block";
@@ -288,51 +381,10 @@
   }
 
   async function saveEdit(dbField, fieldId) {
-    const saveBtn = document.querySelector(`#${fieldId}Edit .btn`);
     const newValue = document.getElementById(fieldId + "Input").value.trim();
     if(!newValue) return;
-
-    saveBtn.innerText = "⏳";
     const { error } = await supabaseClient.from("hostels").update({ [dbField]: newValue }).eq("id", currentRoomId);
-    
-    if (!error) {
-      roomData[dbField] = newValue;
-      document.getElementById(fieldId + "Display").innerText = newValue;
-      cancelEdit(fieldId);
-    }
-    saveBtn.innerText = "SAVE";
-  }
-
-  function renderGallery(urls) {
-    const mainImg = document.getElementById("mainRoomImage");
-    const thumbRow = document.getElementById("thumbnailRow");
-    if (!urls || urls.length === 0) {
-      mainImg.src = "https://via.placeholder.com/800x800?text=No+Images";
-      return;
-    }
-    document.getElementById("prevBtn").style.display = urls.length > 1 ? "flex" : "none";
-    document.getElementById("nextBtn").style.display = urls.length > 1 ? "flex" : "none";
-    mainImg.src = urls[currentImageIndex];
-    urls.forEach((url, i) => {
-      const img = document.createElement("img");
-      img.src = url;
-      img.className = i === currentImageIndex ? "thumb-img active" : "thumb-img";
-      img.onclick = () => { currentImageIndex = i; updateMainImage(); };
-      thumbRow.appendChild(img);
-    });
-  }
-
-  function changeImage(direction) {
-    const urls = roomData.image_urls;
-    currentImageIndex = (currentImageIndex + direction + urls.length) % urls.length;
-    updateMainImage();
-  }
-
-  function updateMainImage() {
-    document.getElementById("mainRoomImage").src = roomData.image_urls[currentImageIndex];
-    document.querySelectorAll(".thumb-img").forEach((t, i) => {
-      t.classList.toggle("active", i === currentImageIndex);
-    });
+    if (!error) { roomData[dbField] = newValue; updateUI(); cancelEdit(fieldId); }
   }
 
   async function deleteRoom() {
