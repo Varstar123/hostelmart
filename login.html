@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login | Hostel Mart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* --- GLOBAL --- */
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=2069&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    /* --- LOGIN CARD --- */
+    .card {
+      background: white;
+      padding: 40px 32px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      box-sizing: border-box;
+      transition: all 0.3s ease;
+    }
+
+    .brand { text-align: center; font-size: 24px; font-weight: 800; color: #2563eb; letter-spacing: -0.5px; margin-bottom: 8px; }
+    .card h2 { margin: 0 0 8px 0; font-size: 26px; color: #0f172a; text-align: center; font-weight: 700; letter-spacing: -0.5px; }
+    .subtitle { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 28px; }
+
+    /* --- INPUTS --- */
+    .form-group { margin-bottom: 16px; }
+    label { display: block; font-size: 13px; font-weight: 600; color: #4b5563; margin-bottom: 6px; }
+    input { width: 100%; padding: 12px 14px; font-size: 15px; font-family: inherit; border: 1px solid #d1d5db; border-radius: 10px; box-sizing: border-box; background: #f8fafc; transition: all 0.2s ease; }
+    input:focus { outline: none; border-color: #2563eb; background: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+
+    /* Helper container to smoothly hide/show extra fields */
+    #registerFields {
+      display: none;
+    }
+
+    /* --- BUTTONS & LINKS --- */
+    button { width: 100%; margin-top: 12px; padding: 14px; background: #2563eb; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+    button:hover:not(:disabled) { background: #1d4ed8; }
+    button:disabled { background: #9ca3af; cursor: not-allowed; }
+
+    .toggle-container { text-align: center; margin-top: 24px; font-size: 14px; color: #4b5563; }
+    .toggle-link { color: #2563eb; font-weight: 600; cursor: pointer; text-decoration: none; transition: color 0.2s; }
+    .toggle-link:hover { color: #1d4ed8; text-decoration: underline; }
+
+    #msg { margin-top: 16px; text-align: center; font-size: 14px; font-weight: 500; min-height: 20px; border-radius: 8px; padding: 10px; display: none; }
+    .msg-error { background: #fef2f2; color: #ef4444; display: block !important;}
+    .msg-success { background: #f0fdf4; color: #16a34a; display: block !important;}
+    .msg-loading { background: #f8fafc; color: #64748b; display: block !important;}
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="brand">Hostel Mart</div>
+  <h2 id="title">Welcome back</h2>
+  <div class="subtitle" id="subtitle">Enter your details to access your account.</div>
+
+  <div id="registerFields">
+    <div class="form-group">
+      <label for="fullName">Full Name</label>
+      <input type="text" id="fullName" placeholder="e.g., Jane Doe" />
+    </div>
+    
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" placeholder="e.g., janedoe99" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="email">College Email</label>
+    <input type="email" id="email" placeholder="you@college.edu" />
+  </div>
+
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="••••••••" />
+  </div>
+
+  <button id="authBtn">Sign In</button>
+
+  <div id="msg"></div>
+
+  <div class="toggle-container">
+    <span id="toggleText">Don't have an account?</span> 
+    <span class="toggle-link" id="toggleLink">Sign up</span>
+  </div>
+</div>
+
+<script>
+  /* ================= CONFIG ================= */
+  const SUPABASE_URL = "https://uluwxacapyysyuwpmqtz.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdXd4YWNhcHl5c3l1d3BtcXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODc0ODQsImV4cCI6MjA4NzI2MzQ4NH0.8dOeocJ5Q2tKy6gDu7rAmWgQqv_oetEXSGH2kWljZJo";
+
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false }
+  });
+
+  /* ================= STATE & ELEMENTS ================= */
+  let isLogin = true;
+
+  const titleEl = document.getElementById("title");
+  const subtitleEl = document.getElementById("subtitle");
+  const btnEl = document.getElementById("authBtn");
+  const toggleTextEl = document.getElementById("toggleText");
+  const toggleLinkEl = document.getElementById("toggleLink");
+  const msgEl = document.getElementById("msg");
+  const registerFieldsEl = document.getElementById("registerFields"); // 🆕 Grab the new fields container
+
+  /* ================= TOGGLE UI MODE ================= */
+  toggleLinkEl.onclick = () => {
+    isLogin = !isLogin;
+    
+    msgEl.className = "";
+    msgEl.innerText = "";
+    
+    if (isLogin) {
+      // LOGIN MODE
+      registerFieldsEl.style.display = "none"; // Hide extra fields
+      titleEl.innerText = "Welcome back";
+      subtitleEl.innerText = "Enter your details to access your account.";
+      btnEl.innerText = "Sign In";
+      toggleTextEl.innerText = "Don't have an account?";
+      toggleLinkEl.innerText = "Sign up";
+    } else {
+      // REGISTER MODE
+      registerFieldsEl.style.display = "block"; // Show extra fields
+      titleEl.innerText = "Create an account";
+      subtitleEl.innerText = "Sign up to start buying and selling on campus.";
+      btnEl.innerText = "Create Account";
+      toggleTextEl.innerText = "Already have an account?";
+      toggleLinkEl.innerText = "Sign in";
+    }
+  };
+
+  /* ================= AUTH HANDLER ================= */
+  btnEl.onclick = async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    // Basic Validation
+    if (!email || !password) {
+      msgEl.innerText = "Email and password are required.";
+      msgEl.className = "msg-error";
+      return;
+    }
+
+    if (password.length < 6) {
+      msgEl.innerText = "Password must be at least 6 characters.";
+      msgEl.className = "msg-error";
+      return;
+    }
+
+    btnEl.disabled = true;
+    btnEl.innerText = "Please wait...";
+    msgEl.innerText = "Connecting securely...";
+    msgEl.className = "msg-loading";
+
+    let result;
+
+    if (isLogin) {
+      // 1. LOGIN REQUEST
+      result = await supabaseClient.auth.signInWithPassword({ email, password });
+    } else {
+      // 2. REGISTER REQUEST
+      const fullName = document.getElementById("fullName").value.trim();
+      const username = document.getElementById("username").value.trim();
+
+      if (!fullName || !username) {
+        msgEl.innerText = "Full Name and Username are required to sign up.";
+        msgEl.className = "msg-error";
+        btnEl.disabled = false;
+        btnEl.innerText = "Create Account";
+        return;
+      }
+
+      // ✨ Save extra info into Supabase's user_metadata
+      result = await supabaseClient.auth.signUp({ 
+        email, 
+        password,
+        options: {
+          data: {
+            full_name: fullName,
+            username: username
+          }
+        }
+      });
+    }
+
+    if (result.error) {
+      msgEl.innerText = result.error.message;
+      msgEl.className = "msg-error";
+      btnEl.disabled = false;
+      btnEl.innerText = isLogin ? "Sign In" : "Create Account";
+      return;
+    }
+
+    const { data } = await supabaseClient.auth.getSession();
+
+    if (!data.session) {
+      msgEl.innerText = "Success! Please check your email to verify your account.";
+      msgEl.className = "msg-success";
+      btnEl.disabled = false;
+      btnEl.innerText = isLogin ? "Sign In" : "Create Account";
+      return;
+    }
+
+    msgEl.innerText = "Success! Redirecting to marketplace...";
+    msgEl.className = "msg-success";
+
+    setTimeout(() => {
+      location.href = "index.html";
+    }, 800);
+  };
+</script>
+
+</body>
+</html>
