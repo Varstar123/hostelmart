@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hostel Finder | Hostel Mart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* --- MODERN CSS VARIABLES --- */
+    :root {
+      --bg: #ffffff; --card: #ffffff; --text: #0f172a; --text-muted: #64748b;
+      --accent: #2563eb; --divider: #e2e8f0; --modal-bg: rgba(15, 23, 42, 0.6);
+      --btn-border: #0f172a; --btn-text: #0f172a; --btn-hover-bg: #0f172a;
+      --btn-hover-text: #ffffff; --profile-bg: #f1f5f9;
+    }
+
+    body.dark-mode {
+      --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --text-muted: #94a3b8;
+      --divider: #334155; --btn-border: #ffffff; --btn-text: #ffffff;
+      --btn-hover-bg: #ffffff; --btn-hover-text: #0f172a; --profile-bg: #334155;
+    }
+
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: background 0.3s ease; }
+    .logo-font { font-family: 'Outfit', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
+
+    /* --- PREMIUM HEADER --- */
+    header { padding: 14px 5%; background: var(--card); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 0 var(--divider); position: sticky; top: 0; z-index: 100; }
+    .header-left { display: flex; align-items: center; gap: 12px; }
+    
+    .profile-btn { 
+      border: 1.5px solid var(--divider); background: var(--profile-bg); border-radius: 50%; width: 40px; height: 40px; 
+      display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; overflow: hidden;
+    }
+    .profile-btn img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .icon-svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* --- BUTTONS --- */
+    .btn { 
+      padding: 10px 22px; border-radius: 8px; border: 1.5px solid var(--btn-border); background: transparent; color: var(--btn-text); 
+      font-weight: 600; font-size: 13px; text-decoration: none; transition: 0.3s; display: inline-block; cursor: pointer; text-align: center;
+      font-family: 'Outfit', sans-serif; letter-spacing: 0.5px; outline: none; -webkit-tap-highlight-color: transparent;
+    }
+    .btn:hover { background: var(--btn-hover-bg); color: var(--btn-hover-text); transform: translateY(-2px); }
+    .btn-secondary { border-color: var(--divider); color: var(--text); }
+    .btn-sm { padding: 8px 14px; font-size: 11px; }
+
+    .container { max-width: 1200px; margin: 40px auto; padding: 0 5%; }
+    
+    /* --- SEARCH BAR --- */
+    .search-section { margin-bottom: 50px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+    .search-container { position: relative; width: 100%; max-width: 600px; }
+    .search-container input { 
+      width: 100%; padding: 16px 20px 16px 50px; border-radius: 14px; border: 1.5px solid var(--divider); 
+      background: var(--card); color: var(--text); font-family: inherit; font-size: 15px; transition: 0.3s; box-sizing: border-box; outline: none;
+    }
+    .search-container input:focus { border-color: var(--btn-border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
+    .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+    
+    /* --- GRID & CARDS --- */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 35px; }
+    .hostel-card { 
+      background: var(--card); border-radius: 24px; overflow: hidden; border: 1px solid var(--divider); 
+      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); display: flex; flex-direction: column; 
+    }
+    .hostel-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px -12px rgba(0,0,0,0.12); border-color: var(--btn-border); }
+    
+    .card-img { width: 100%; height: 230px; object-fit: cover; background: var(--divider); transition: 0.6s; cursor: pointer; }
+    .hostel-card:hover .card-img { transform: scale(1.05); }
+    
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-right: 6px; font-family: 'Outfit'; letter-spacing: 0.5px; }
+    .badge-date { background: #fee2e2; color: #ef4444; }
+    .badge-food { background: #dcfce7; color: #16a34a; }
+    
+    .card-content { padding: 25px; flex: 1; }
+    .card-content h2 { margin: 0 0 10px 0; font-family: 'Outfit'; font-size: 22px; cursor: pointer; line-height: 1.2; }
+    .price { font-family: 'Outfit'; font-size: 24px; font-weight: 700; color: #10b981; margin: 15px 0; }
+    
+    .nearby-tag { 
+      display: inline-block; font-size: 11px; background: rgba(37, 99, 235, 0.08); color: var(--accent);
+      padding: 4px 10px; border-radius: 6px; margin: 2px; font-weight: 600; font-family: 'Outfit';
+    }
+
+    /* --- MODAL --- */
+    .modal-overlay { position: fixed; inset: 0; background: var(--modal-bg); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px); }
+    .modal-overlay.active { display: flex; }
+    .modal { 
+      background: var(--card); width: 95%; max-width: 600px; padding: 40px; border-radius: 30px; 
+      position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid var(--divider); 
+    }
+    .close-modal { position: absolute; top: 25px; right: 25px; cursor: pointer; font-size: 22px; color: var(--text-muted); transition: 0.2s; }
+    
+    .form-group { margin-bottom: 22px; }
+    label { display: block; font-size: 11px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    input, select, textarea { 
+      width: 100%; padding: 14px 18px; border: 1.5px solid var(--divider); border-radius: 12px; 
+      background: var(--bg); color: var(--text); box-sizing: border-box; font-family: inherit; transition: 0.3s; outline: none;
+    }
+    input:focus { border-color: var(--btn-border); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+    .nearby-input-row { display: grid; grid-template-columns: 1fr 100px auto; gap: 10px; margin-bottom: 12px; align-items: center; }
+    .nearby-list { margin-bottom: 20px; border: 1.5px dashed var(--divider); padding: 15px; border-radius: 16px; background: var(--profile-bg); }
+    .nearby-item { display: flex; justify-content: space-between; padding: 8px 12px; background: var(--card); border-radius: 10px; margin-bottom: 6px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+
+    .preview-container { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+    .preview-wrapper { width: 70px; height: 70px; border-radius: 12px; overflow: hidden; border: 1px solid var(--divider); }
+    .preview-img { width: 100%; height: 100%; object-fit: cover; }
+
+    @media (max-width: 600px) { .form-row, .nearby-input-row { grid-template-columns: 1fr; } .container { margin-top: 20px; } }
+  </style>
+</head>
+<body>
+
+<script>
+  if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+</script>
+
+<header>
+  <div class="header-left">
+    <div class="profile-btn" onclick="location.href='index.html'">
+      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+    </div>
+    <h2 class="logo-font" style="margin: 0; font-size: 20px; cursor: pointer;" onclick="location.href='index.html'">Hostel Mart</h2>
+  </div>
+  <a href="index.html" class="btn btn-secondary">← BACK TO MART</a>
+</header>
+
+<div class="container">
+  <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+    <div>
+      <h1 class="logo-font" style="margin:0; font-size: 32px; line-height: 1;">Room Finder</h1>
+      <p style="color: var(--text-muted); margin: 10px 0 0 0; font-weight: 400; font-size: 15px;">Search stays near your college or institution.</p>
+    </div>
+    <button class="btn" onclick="openModal()">+ LIST YOUR ROOM</button>
+  </div>
+
+  <div class="search-section">
+    <div class="search-container">
+      <svg class="search-icon icon-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="hostelSearch" placeholder="Search by name, area, or college..." oninput="filterHostels()">
+    </div>
+    <button class="btn btn-secondary btn-sm" id="nearMeBtn" onclick="findNearMe()">
+      <svg class="icon-svg" style="margin-right: 5px; width: 14px; height: 14px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+      NEAR ME
+    </button>
+  </div>
+  
+  <div class="grid" id="hostelGrid">
+    <div style="text-align: center; grid-column: 1/-1; padding: 100px; opacity: 0.5; font-family: 'Outfit'; letter-spacing: 1px;">SYNCING LISTINGS...</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <span class="close-modal" onclick="closeModal()">✕</span>
+    <h2 class="logo-font" style="margin-top:0; font-size: 26px; border-bottom: 1px solid var(--divider); padding-bottom: 15px; margin-bottom: 25px;">Post Listing</h2>
+    <div class="form-group"><label>Hostel Name</label><input id="hName" placeholder="Enter hostel name"></div>
+    <div class="form-row">
+      <div class="form-group"><label>Gender</label><select id="hType"><option value="Men">Men</option><option value="Women">Women</option><option value="Unisex">Unisex</option></select></div>
+      <div class="form-group"><label>Vacating Date</label><input type="date" id="hDate"></div>
+    </div>
+    <div class="form-group"><label>Location</label><input id="hLoc" placeholder="Area, Landmark, or City"></div>
+    <div class="form-group">
+        <label>Nearest Institutions</label>
+        <div id="institutionsList" class="nearby-list" style="display:none;"></div>
+        <div class="nearby-input-row">
+            <input type="text" id="instName" placeholder="College name">
+            <input type="text" id="instDist" placeholder="KM">
+            <button class="btn btn-sm" onclick="addInstitution()">ADD</button>
+        </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Food</label><select id="hFood"><option value="Included">Included</option><option value="Not Included">Not Included</option><option value="Flexible">Flexible</option></select></div>
+      <div class="form-group"><label>Rent (₹)</label><input type="number" id="hRent" placeholder="Monthly rent"></div>
+    </div>
+    <div class="form-group"><label>Contact Number</label><input id="hContact" placeholder="Phone or WhatsApp"></div>
+    <div class="form-group">
+        <label>Photos</label>
+        <input type="file" id="hImages" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+        <button class="btn btn-secondary btn-sm" style="width: 100%; border-style: dashed;" onclick="document.getElementById('hImages').click()">SELECT IMAGES</button>
+        <div id="previewContainer" class="preview-container"></div>
+    </div>
+    <button class="btn" style="width:100%; margin-top: 10px;" id="submitBtn" onclick="submitHostel()">PUBLISH LISTING</button>
+  </div>
+</div>
+
+<script>
+  const SUPABASE_URL = "https://uluwxacapyysyuwpmqtz.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdXd4YWNhcHl5c3l1d3BtcXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODc0ODQsImV4cCI6MjA4NzI2MzQ4NH0.8dOeocJ5Q2tKy6gDu7rAmWgQqv_oetEXSGH2kWljZJo";
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let currentUser = null, selectedFiles = [], allHostels = [], nearbyInstitutes = [];
+
+  async function checkAuth() {
+    const { data } = await supabaseClient.auth.getSession();
+    currentUser = data.session?.user;
+  }
+
+  function addInstitution() {
+    const name = document.getElementById('instName').value.trim();
+    const dist = document.getElementById('instDist').value.trim();
+    if (!name || !dist) return;
+    nearbyInstitutes.push({ name, dist });
+    document.getElementById('instName').value = "";
+    document.getElementById('instDist').value = "";
+    renderInstitutionsUI();
+  }
+
+  function renderInstitutionsUI() {
+    const listDiv = document.getElementById('institutionsList');
+    listDiv.innerHTML = "";
+    listDiv.style.display = nearbyInstitutes.length ? "block" : "none";
+    nearbyInstitutes.forEach((item, i) => {
+        listDiv.innerHTML += `<div class="nearby-item"><span>🎓 ${item.name} (${item.dist}km)</span><span style="color:#ef4444; cursor:pointer;" onclick="nearbyInstitutes.splice(${i},1); renderInstitutionsUI();">✕</span></div>`;
+    });
+  }
+
+  function filterHostels() {
+    const query = document.getElementById('hostelSearch').value.toLowerCase();
+    const filtered = allHostels.filter(h => {
+      const nameMatch = h.hostel_name.toLowerCase().includes(query);
+      const locMatch = h.location.toLowerCase().includes(query);
+      const instMatch = h.nearby_institutions?.some(inst => inst.name.toLowerCase().includes(query));
+      return nameMatch || locMatch || instMatch;
+    });
+    renderHostels(filtered);
+  }
+
+  async function findNearMe() {
+    if (!navigator.geolocation) return;
+    const btn = document.getElementById('nearMeBtn');
+    btn.innerHTML = `⌛ LOCATING...`;
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
+        const data = await res.json();
+        const city = data.address.city || data.address.suburb || "";
+        document.getElementById('hostelSearch').value = city;
+        filterHostels();
+        btn.innerHTML = `<svg class="icon-svg" style="margin-right: 5px; width: 14px; height: 14px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> ${city.toUpperCase()}`;
+      } catch(e) { btn.innerText = "📍 NEAR ME"; }
+    });
+  }
+
+  async function loadHostels() {
+    const { data } = await supabaseClient.from('hostels').select('*').order('vacating_date', { ascending: true });
+    allHostels = data || [];
+    renderHostels(allHostels);
+  }
+
+  function viewRoom(id) {
+    localStorage.setItem("item_id", id);
+    window.location.href = "room.html";
+  }
+
+  function renderHostels(list) {
+    const grid = document.getElementById('hostelGrid');
+    grid.innerHTML = list.length ? "" : "<p style='grid-column:1/-1; text-align:center; padding:50px; opacity:0.5;'>No matching rooms found.</p>";
+    list.forEach(h => {
+      const date = new Date(h.vacating_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      let tags = h.nearby_institutions ? h.nearby_institutions.slice(0, 2).map(i => `<span class="nearby-tag">🎓 ${i.name}</span>`).join('') : "";
+      
+      const div = document.createElement('div');
+      div.className = 'hostel-card';
+      div.innerHTML = `
+        <img src="${h.image_urls?.[0] || 'https://via.placeholder.com/400x230'}" class="card-img" onclick="viewRoom('${h.id}')">
+        <div class="card-content">
+          <div style="margin-bottom:12px;">
+            <span class="badge badge-date">
+              <svg class="icon-svg" style="width: 10px; height: 10px; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              From ${date}
+            </span>
+            <span class="badge badge-food">${h.food_status}</span>
+          </div>
+          <h2 class="logo-font" onclick="viewRoom('${h.id}')">${h.hostel_name}</h2>
+          <div style="color:var(--text-muted); font-size:13px; margin-bottom:10px; font-weight:500; display: flex; align-items: center; gap: 5px;">
+             <svg class="icon-svg" style="width: 14px; height: 14px; opacity: 0.7;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+             ${h.location}
+          </div>
+          <div style="margin-bottom:15px; display:flex; flex-wrap:wrap; gap:4px;">${tags}</div>
+          <div class="price">₹${h.rent}<span style="font-size:12px; opacity:0.6; font-weight:500;"> / month</span></div>
+          <button class="btn btn-sm" style="width:100%; margin-top:10px;" onclick="viewRoom('${h.id}')">VIEW DETAILS</button>
+        </div>
+      `;
+      grid.appendChild(div);
+    });
+  }
+
+  function openModal() { if(!currentUser) return alert("Log in first"); document.getElementById('modalOverlay').classList.add('active'); }
+  function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+  function handleFileSelect(e) { selectedFiles = Array.from(e.target.files); renderPreviews(); }
+  function renderPreviews() {
+    const container = document.getElementById('previewContainer'); container.innerHTML = "";
+    selectedFiles.forEach(f => {
+        container.innerHTML += `<div class="preview-wrapper"><img src="${URL.createObjectURL(f)}" class="preview-img"></div>`;
+    });
+  }
+
+  async function submitHostel() {
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true; btn.innerText = "PUBLISHING...";
+    const urls = [];
+    for (let f of selectedFiles) {
+      const path = `${currentUser.id}/${Date.now()}-${f.name}`;
+      const { data } = await supabaseClient.storage.from('item-images').upload(path, f);
+      if(data) { const { data: pUrl } = supabaseClient.storage.from('item-images').getPublicUrl(path); urls.push(pUrl.publicUrl); }
+    }
+    await supabaseClient.from('hostels').insert([{
+      user_id: currentUser.id, hostel_name: document.getElementById('hName').value,
+      location: document.getElementById('hLoc').value, gender_type: document.getElementById('hType').value,
+      food_status: document.getElementById('hFood').value, rent: document.getElementById('hRent').value,
+      contact_number: document.getElementById('hContact').value, vacating_date: document.getElementById('hDate').value,
+      nearby_institutions: nearbyInstitutes, image_urls: urls
+    }]);
+    location.reload();
+  }
+
+  checkAuth();
+  loadHostels();
+</script>
+</body>
+</html>

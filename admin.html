@@ -6,219 +6,273 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background: #f1f5f9;
-      color: #0f172a;
+    /* --- SYSTEM PALETTE --- */
+    :root {
+        --primary: #0f172a;
+        --accent: #2563eb;
+        --danger: #ef4444;
+        --success: #10b981;
+        --bg: #f8fafc;
+        --card: #ffffff;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --text-muted: #64748b;
     }
 
-    /* --- HIDE APP BY DEFAULT --- */
-    /* This prevents regular users from seeing a "flash" of the admin panel before being kicked out */
-    #adminApp {
-      display: none; 
+    body { 
+        margin: 0; 
+        font-family: 'Inter', sans-serif; 
+        background: var(--bg); 
+        color: var(--text); 
+        transition: 0.3s;
     }
 
-    /* --- HEADER --- */
-    header { background: #1e293b; padding: 16px 5%; display: flex; justify-content: space-between; align-items: center; color: white; }
-    header h2 { margin: 0; font-size: 20px; font-weight: 700; color: #38bdf8; }
-    .btn { padding: 8px 14px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 13px; text-decoration: none; transition: all 0.2s; }
-    .btn-outline { background: transparent; color: white; border: 1px solid #475569; }
-    .btn-outline:hover { background: #334155; }
+    .logo-font { font-family: 'Outfit', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
+
+    #adminApp { display: none; }
+
+    /* --- PREMIUM HEADER --- */
+    header { 
+        background: var(--card); 
+        padding: 0 5%; 
+        display: flex; 
+        justify-content: space-between; 
+        align-items: center; 
+        height: 80px; 
+        border-bottom: 1px solid var(--border); 
+        position: sticky; 
+        top: 0; 
+        z-index: 100;
+    }
+
+    nav { display: flex; gap: 10px; height: 100%; align-items: center; margin-left: 50px; flex: 1; }
+    
+    .nav-link { 
+        color: var(--text-muted); 
+        text-decoration: none; 
+        font-weight: 700; 
+        font-size: 13px; 
+        cursor: pointer; 
+        padding: 10px 20px; 
+        border-radius: 50px; 
+        transition: 0.3s; 
+        font-family: 'Outfit', sans-serif;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+    .nav-link:hover { color: var(--text); background: var(--bg); }
+    .nav-link.active { color: white; background: var(--primary); }
+
+    /* --- GHOST BUTTON SYSTEM --- */
+    .btn { 
+        padding: 10px 22px; 
+        border-radius: 8px; 
+        border: 1.5px solid var(--primary); 
+        background: transparent; 
+        color: var(--primary); 
+        font-weight: 700; 
+        font-size: 12px; 
+        text-decoration: none; 
+        transition: all 0.3s ease; 
+        display: inline-block; 
+        cursor: pointer;
+        font-family: 'Outfit', sans-serif;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    .btn:hover { background: var(--primary); color: white; transform: translateY(-2px); }
+    
+    .btn-exit { border-color: var(--border); color: var(--text-muted); }
+    .btn-exit:hover { background: var(--danger); border-color: var(--danger); color: white; }
 
     /* --- DASHBOARD LAYOUT --- */
-    .dashboard-container { max-width: 1200px; margin: 40px auto; padding: 0 5%; }
-    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .dashboard-header h1 { margin: 0; font-size: 28px; }
+    .dashboard-container { max-width: 1200px; margin: 50px auto; padding: 0 5%; }
+    .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .dashboard-header h1 { margin: 0; font-size: 28px; font-family: 'Outfit', sans-serif; font-weight: 800; }
 
-    /* --- TABLE STYLES --- */
-    .table-wrapper { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow-x: auto; border: 1px solid #e2e8f0; }
+    /* --- REFINED TABLE --- */
+    .table-wrapper { 
+        background: var(--card); 
+        border-radius: 20px; 
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); 
+        overflow: hidden; 
+        border: 1px solid var(--border); 
+    }
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    th, td { padding: 16px; border-bottom: 1px solid #e2e8f0; }
-    th { background: #f8fafc; font-weight: 600; font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
-    td { font-size: 14px; color: #334155; }
+    th, td { padding: 20px; border-bottom: 1px solid var(--border); }
+    th { 
+        background: #fafafa; 
+        font-weight: 800; 
+        font-size: 11px; 
+        color: var(--text-muted); 
+        text-transform: uppercase; 
+        letter-spacing: 1.5px; 
+        font-family: 'Outfit', sans-serif;
+    }
+    td { font-size: 14px; font-weight: 500; }
     
-    .item-img { width: 50px; height: 50px; object-fit: cover; border-radius: 6px; }
-    .price-tag { font-weight: 700; color: #10b981; }
+    .item-img { width: 55px; height: 55px; object-fit: cover; border-radius: 12px; border: 1px solid var(--border); }
+    .price-tag { font-family: 'Outfit', sans-serif; font-weight: 700; color: var(--success); font-size: 16px; }
 
     /* Action Buttons */
     .action-btns { display: flex; gap: 8px; }
-    .edit-btn { background: #fef9c3; color: #ca8a04; border: 1px solid #fde047; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s;}
-    .edit-btn:hover { background: #fef08a; }
-    .delete-btn { background: #fef2f2; color: #ef4444; border: 1px solid #fecaca; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; transition: 0.2s;}
-    .delete-btn:hover { background: #fca5a5; color: #b91c1c;}
+    .edit-btn { background: transparent; border: 1.5px solid var(--accent); color: var(--accent); }
+    .edit-btn:hover { background: var(--accent); color: white; }
+    
+    .delete-btn { background: transparent; border: 1.5px solid var(--danger); color: var(--danger); }
+    .delete-btn:hover { background: var(--danger); color: white; }
 
-    #statusMsg { padding: 16px; text-align: center; color: #64748b; font-weight: 500;}
+    #statusMsg { padding: 50px; text-align: center; color: var(--text-muted); font-weight: 500; font-family: 'Outfit'; letter-spacing: 1px; }
+
+    /* Mobile Compatibility */
+    @media (max-width: 768px) {
+        header { flex-direction: column; height: auto; padding: 20px; gap: 20px; }
+        nav { margin-left: 0; width: 100%; justify-content: center; }
+        .dashboard-header { flex-direction: column; gap: 15px; text-align: center; }
+    }
   </style>
 </head>
 <body>
 
 <div id="adminApp">
   <header>
-    <h2>Hostel Mart Admin</h2>
-    <a href="index.html" class="btn btn-outline">Exit Admin</a>
+    <div style="display: flex; align-items: center;">
+        <h2 class="logo-font" style="color: var(--accent); font-size: 22px;">Admin Panel</h2>
+        <nav>
+            <span class="nav-link active" id="navItems" onclick="switchTab('items')">Marketplace</span>
+            <span class="nav-link" id="navHostels" onclick="switchTab('hostels')">Hostels</span>
+        </nav>
+    </div>
+    <a href="index.html" class="btn btn-exit">Exit Console</a>
   </header>
 
   <div class="dashboard-container">
     <div class="dashboard-header">
-      <h1>Manage Marketplace Items</h1>
-      <a href="sell.html" class="btn" style="background: #2563eb; color: white;">+ Add Item</a>
+      <h1 id="viewTitle">Inventory Management</h1>
+      <div id="headerActions">
+        <a href="sell.html" class="btn">+ Create Listing</a>
+      </div>
     </div>
 
     <div class="table-wrapper">
-      <table>
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Location</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="adminTableBody">
-          </tbody>
+      <table id="adminTable">
+        <thead id="adminTableHeader"></thead>
+        <tbody id="adminTableBody"></tbody>
       </table>
-      <div id="statusMsg">Loading database records...</div>
+      <div id="statusMsg">Syncing with Cloud Database...</div>
     </div>
   </div>
 </div>
 
 <script>
-  /* ================= CONFIG ================= */
   const SUPABASE_URL = "https://uluwxacapyysyuwpmqtz.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdXd4YWNhcHl5c3l1d3BtcXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODc0ODQsImV4cCI6MjA4NzI2MzQ4NH0.8dOeocJ5Q2tKy6gDu7rAmWgQqv_oetEXSGH2kWljZJo";
 
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-  });
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  /* 🛡️ SECURITY: Define who is allowed in 🛡️ */
-  // CHANGE THIS TO YOUR ACTUAL REGISTRATION EMAIL
-  const ALLOWED_ADMIN_EMAILS = [
-    "varunnarayan100@gmail.com", 
-    "varstarcrypto@gmail.com" 
-  ];
+  const ALLOWED_ADMIN_EMAILS = ["varunnarayan100@gmail.com", "varstarcrypto@gmail.com"];
+  let currentTab = 'items'; 
 
-  /* ================= AUTH & AUTHORIZATION CHECK ================= */
-  async function checkAdminAuth() {
-    const { data } = await supabaseClient.auth.getSession();
+  /* --- TAB SWITCHING --- */
+  function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
     
-    // 1. Are they logged in at all?
-    if (!data.session) {
-      window.location.href = "login.html";
-      return;
+    if (tab === 'items') {
+        document.getElementById('navItems').classList.add('active');
+        document.getElementById('viewTitle').innerText = "Marketplace Inventory";
+        document.getElementById('headerActions').innerHTML = `<a href="sell.html" class="btn">+ New Product</a>`;
+    } else {
+        document.getElementById('navHostels').classList.add('active');
+        document.getElementById('viewTitle').innerText = "Hostel Directories";
+        document.getElementById('headerActions').innerHTML = `<a href="hostel.html" class="btn">+ New Room</a>`;
     }
-
-    const userEmail = data.session.user.email;
-
-    // 2. Are they on the VIP Admin list?
-    if (!ALLOWED_ADMIN_EMAILS.includes(userEmail)) {
-      alert("🛑 Access Denied: You do not have administrator privileges.");
-      window.location.href = "index.html"; // Kick them back to the marketplace
-      return;
-    }
-
-    // 3. If they pass the checks, reveal the dashboard and load data
-    document.getElementById("adminApp").style.display = "block";
-    loadAdminItems();
+    loadData();
   }
 
-  /* ================= READ: Load all items ================= */
-  async function loadAdminItems() {
+  /* --- AUTH PROTECTION --- */
+  async function checkAdminAuth() {
+    const { data } = await supabaseClient.auth.getSession();
+    if (!data.session) { window.location.href = "login.html"; return; }
+    if (!ALLOWED_ADMIN_EMAILS.includes(data.session.user.email)) {
+      alert("Unauthorized Access Attempt Detected.");
+      window.location.href = "index.html";
+      return;
+    }
+    document.getElementById("adminApp").style.display = "block";
+    loadData();
+  }
+
+  /* --- DATA ENGINE --- */
+  async function loadData() {
+    const tableHeader = document.getElementById("adminTableHeader");
     const tableBody = document.getElementById("adminTableBody");
     const statusMsg = document.getElementById("statusMsg");
-    
-    statusMsg.innerText = "Loading database records...";
+
+    statusMsg.innerText = `Establishing Secure Connection...`;
     statusMsg.style.display = "block";
     tableBody.innerHTML = "";
 
-    const { data, error } = await supabaseClient
-      .from("items")
-      .select("*")
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      statusMsg.innerText = "Error loading items: " + error.message;
-      statusMsg.style.color = "red";
-      return;
+    if (currentTab === 'items') {
+        tableHeader.innerHTML = `<tr><th>Visual</th><th>Item Name</th><th>Category</th><th>Valuation</th><th>Location</th><th>Management</th></tr>`;
+    } else {
+        tableHeader.innerHTML = `<tr><th>Visual</th><th>Hostel Title</th><th>Gender</th><th>Rent/Mo</th><th>Location</th><th>Management</th></tr>`;
     }
 
-    if (data.length === 0) {
-      statusMsg.innerText = "No items found in the database.";
-      return;
-    }
+    const { data, error } = await supabaseClient.from(currentTab).select("*").order("created_at", { ascending: false });
+
+    if (error) { statusMsg.innerText = "Connection Error: " + error.message; return; }
+    if (data.length === 0) { statusMsg.innerText = "No entries found in this directory."; return; }
 
     statusMsg.style.display = "none";
 
-    data.forEach(item => {
+    data.forEach(record => {
       const row = document.createElement("tr");
-
-      let imgSrc = "https://via.placeholder.com/50x50?text=NA"; 
-      if (item.image_urls && item.image_urls.length > 0) {
-        imgSrc = Array.isArray(item.image_urls) ? item.image_urls[0] : item.image_urls;
-      }
+      const title = record.title || record.hostel_name;
+      const price = record.price || record.rent;
+      const meta = record.category || record.gender_type;
+      
+      let imgSrc = "https://via.placeholder.com/60x60?text=NONE"; 
+      if (record.image_urls && record.image_urls.length > 0) imgSrc = record.image_urls[0];
 
       row.innerHTML = `
-        <td><img src="${imgSrc}" class="item-img" onerror="this.src='https://via.placeholder.com/50x50?text=NA'"></td>
-        <td style="font-weight: 500;">${item.title}</td>
-        <td>${item.category}</td>
-        <td class="price-tag">₹${item.price}</td>
-        <td>${item.location || "N/A"}</td>
+        <td><img src="${imgSrc}" class="item-img" onerror="this.src='https://via.placeholder.com/60x60?text=NONE'"></td>
+        <td style="font-weight: 700;">${title}</td>
+        <td><span style="background:var(--bg); color: var(--text-muted); padding:6px 12px; border-radius:50px; font-size:10px; font-weight:800; font-family:'Outfit'; text-transform: uppercase;">${meta}</span></td>
+        <td class="price-tag">₹${price}</td>
+        <td style="color: var(--text-muted); font-weight: 600;">${record.location || "N/A"}</td>
         <td class="action-btns">
-          <button class="edit-btn" onclick="updateItemPrice('${item.id}', '${item.title}', ${item.price})">Edit Price</button>
-          <button class="delete-btn" onclick="deleteAdminItem('${item.id}', '${item.title}')">Delete</button>
+          <button class="btn btn-sm edit-btn" onclick="quickEditPrice('${record.id}', '${title}', ${price})">EDIT PRICE</button>
+          <button class="btn btn-sm delete-btn" onclick="deleteRecord('${record.id}', '${title}')">DELETE</button>
         </td>
       `;
       tableBody.appendChild(row);
     });
   }
 
-  /* ================= UPDATE: Change Price ================= */
-  async function updateItemPrice(id, title, currentPrice) {
-    const newPriceStr = prompt(`Enter new price for "${title}":`, currentPrice);
-    if (newPriceStr === null || newPriceStr.trim() === "") return;
-    
-    const newPrice = Number(newPriceStr);
-    if (isNaN(newPrice)) {
-      alert("Please enter a valid number.");
-      return;
-    }
+  /* --- UPDATING --- */
+  async function quickEditPrice(id, title, currentVal) {
+    const newVal = prompt(`Update valuation for "${title}":`, currentVal);
+    if (newVal === null || newVal.trim() === "" || isNaN(newVal)) return;
 
-    const { error } = await supabaseClient
-      .from("items")
-      .update({ price: newPrice })
-      .eq("id", id);
+    const columnToUpdate = currentTab === 'items' ? { price: newVal } : { rent: newVal };
+    const { error } = await supabaseClient.from(currentTab).update(columnToUpdate).eq("id", id);
 
-    if (error) {
-      alert("Failed to update price: " + error.message);
-    } else {
-      loadAdminItems();
-    }
+    if (error) alert("Update Rejected: " + error.message);
+    else loadData();
   }
 
-  /* ================= DELETE: Remove Item ================= */
-  async function deleteAdminItem(id, title) {
-    const confirmed = confirm(`WARNING: Are you sure you want to permanently delete "${title}"?`);
-    if (!confirmed) return;
-
-    const { error } = await supabaseClient
-      .from("items")
-      .delete()
-      .eq("id", id);
-
-    if (error) {
-      alert("Failed to delete item: " + error.message);
-    } else {
-      loadAdminItems(); 
-    }
+  /* --- DELETION --- */
+  async function deleteRecord(id, title) {
+    if (!confirm(`Are you sure you want to permanently purge "${title}"?`)) return;
+    const { error } = await supabaseClient.from(currentTab).delete().eq("id", id);
+    if (error) alert("Deletion Failed: " + error.message);
+    else loadData();
   }
 
-  // Init
   checkAdminAuth();
 </script>
 
