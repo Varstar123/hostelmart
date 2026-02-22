@@ -22,6 +22,7 @@
       --btn-hover-bg: #0f172a;
       --btn-hover-text: #ffffff;
       --accent: #2563eb;
+      --danger: #ef4444;
     }
 
     body.dark-mode {
@@ -49,13 +50,12 @@
     }
     .btn:hover { background: var(--btn-hover-bg); color: var(--btn-hover-text); transform: translateY(-2px); }
     .btn-secondary { background: transparent; border-color: var(--card-border); color: var(--text-muted); }
-    .btn-danger { border-color: #ef4444; color: #ef4444; }
-    .btn-danger:hover { background: #ef4444; color: white; }
-    .btn-sm { padding: 6px 14px; font-size: 11px; }
+    .btn-danger { border-color: var(--danger); color: var(--danger); }
+    .btn-danger:hover { background: var(--danger); color: white; }
+    .btn-sm { padding: 8px 14px; font-size: 11px; }
 
     .product-container { max-width: 1200px; margin: 40px auto; padding: 0 5%; display: grid; grid-template-columns: 1.1fr 1fr; gap: 60px; }
     
-    /* --- GALLERY --- */
     .gallery-container { display: flex; flex-direction: column; gap: 16px; }
     .main-image-wrapper { 
       background: var(--card-bg); border-radius: 28px; border: 1px solid var(--card-border); 
@@ -73,16 +73,18 @@
     .arrow-left { left: 20px; }
     .arrow-right { right: 20px; }
 
-    .thumbnail-row { display: flex; gap: 12px; overflow-x: auto; padding: 5px; }
+    .thumbnail-row { display: flex; gap: 12px; overflow-x: auto; padding: 10px 5px; }
     .thumb-wrapper { position: relative; flex-shrink: 0; }
     .thumb-img { width: 75px; height: 75px; object-fit: cover; border-radius: 14px; cursor: pointer; opacity: 0.6; border: 2px solid transparent; transition: 0.3s; }
     .thumb-img.active { border-color: var(--btn-border); opacity: 1; transform: translateY(-3px); }
     
-    .delete-thumb { 
-        position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; width: 20px; height: 20px; 
-        border-radius: 50%; display: none; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; border: 2px solid var(--bg-main);
+    .delete-action-btn { 
+        position: absolute; top: -8px; right: -8px; background: var(--danger); color: white; width: 22px; height: 22px; 
+        border-radius: 50%; display: none; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--bg-main);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10;
     }
-    .thumb-wrapper:hover .delete-thumb { display: flex; }
+    .thumb-wrapper:hover .delete-action-btn { display: flex; }
+    .action-icon-small { width: 12px; height: 12px; stroke: white; stroke-width: 4; fill: none; }
 
     /* --- EDITABLE STYLES --- */
     .editable-group { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; margin-bottom: 5px; }
@@ -90,7 +92,8 @@
     .editable-group:hover .edit-icon { opacity: 0.7; }
     .edit-icon:hover { color: var(--accent); opacity: 1 !important; }
 
-    .inline-edit-input { font-family: 'Inter', sans-serif; font-size: inherit; background: var(--card-bg); border: 1.5px solid var(--btn-border); border-radius: 10px; padding: 10px 14px; width: 100%; outline: none; box-sizing: border-box; }
+    .inline-edit-input { font-family: 'Inter', sans-serif; font-size: inherit; background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 10px; padding: 10px 14px; width: 100%; outline: none; box-sizing: border-box; transition: 0.2s; }
+    .inline-edit-input:focus { border-color: var(--btn-border); }
 
     .product-title { margin: 0; font-size: 42px; font-weight: 700; font-family: 'Outfit', sans-serif; line-height: 1.1; }
     .price { font-size: 36px; font-weight: 800; color: #10b981; font-family: 'Outfit', sans-serif; }
@@ -106,8 +109,11 @@
     .description { font-size: 16px; line-height: 1.8; white-space: pre-wrap; color: var(--text-muted); margin-top: 10px; }
 
     .institute-box { border: 1px solid var(--card-border); border-radius: 16px; padding: 15px; margin-bottom: 20px; background: var(--bg-main); }
-    .inst-item { display: flex; justify-content: space-between; font-size: 14px; padding: 8px 0; border-bottom: 1px solid var(--card-border); align-items: center; }
+    .inst-item { display: flex; justify-content: space-between; font-size: 14px; padding: 10px 0; border-bottom: 1px solid var(--card-border); align-items: center; }
     .inst-item:last-child { border: none; }
+    
+    .remove-inst-btn { color: var(--danger); cursor: pointer; padding: 5px; opacity: 0.6; transition: 0.2s; }
+    .remove-inst-btn:hover { opacity: 1; transform: scale(1.1); }
 
     .contact-section { padding-top: 30px; border-top: 1px solid var(--card-border); margin-top: 30px; }
     .contact-number { font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-main); margin-top: 5px; }
@@ -142,7 +148,7 @@
     
     <div id="ownerImageAction" style="display:none; margin-top:10px;">
         <input type="file" id="newImageUpload" multiple accept="image/*" style="display:none;" onchange="handleImageUpdate(event)">
-        <button id="uploadPhotosBtn" class="btn btn-sm btn-secondary" style="width:100%" onclick="document.getElementById('newImageUpload').click()">+ UPLOAD MORE PHOTOS</button>
+        <button id="uploadPhotosBtn" class="btn btn-sm btn-secondary" style="width:100%; border-style: dashed;" onclick="document.getElementById('newImageUpload').click()">+ ADD MORE PHOTOS</button>
     </div>
   </div>
 
@@ -182,18 +188,27 @@
         </div>
     </div>
 
-    <h3 class="logo-font" style="font-size:13px; margin-top:20px; opacity:0.6; display:flex; align-items:center; gap:10px;">
-        NEARBY INSTITUTIONS
-        <svg class="edit-icon" onclick="toggleInstForm()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-    </h3>
-    <div class="institute-box" id="instituteList"></div>
-    <div id="addInstForm" style="display:none; margin-bottom: 20px;">
-        <div style="display:grid; grid-template-columns: 1fr 80px; gap:8px; margin-bottom:10px;">
-            <input type="text" id="newInstName" placeholder="College Name" class="inline-edit-input">
-            <input type="number" id="newInstDist" placeholder="KM" class="inline-edit-input">
-        </div>
-        <button class="btn btn-sm btn-secondary" onclick="addInstitution()">ADD INSTITUTION</button>
+    <div style="display:flex; justify-content: space-between; align-items: center; margin-top: 30px; margin-bottom: 10px;">
+        <h3 class="logo-font" style="font-size:13px; opacity:0.8; margin:0;">NEARBY INSTITUTIONS</h3>
+        <button id="addInstBtn" class="btn btn-sm btn-secondary" style="padding: 4px 8px; display:none;" onclick="toggleInstForm()">+</button>
     </div>
+
+    <div id="addInstForm" style="display:none; background: var(--bg-header); border: 1px solid var(--card-border); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
+        <div class="form-group" style="margin-bottom:10px;">
+            <label style="font-size:10px;">Institution Name</label>
+            <input type="text" id="newInstName" placeholder="e.g. College Name" class="inline-edit-input">
+        </div>
+        <div class="form-group" style="margin-bottom:15px;">
+            <label style="font-size:10px;">Distance (KM)</label>
+            <input type="number" id="newInstDist" placeholder="e.g. 2" class="inline-edit-input">
+        </div>
+        <div style="display:flex; gap: 8px;">
+            <button id="submitInstBtn" class="btn btn-sm" style="flex:1" onclick="addInstitution()">ADD</button>
+            <button class="btn btn-sm btn-secondary" onclick="toggleInstForm()">CANCEL</button>
+        </div>
+    </div>
+
+    <div class="institute-box" id="instituteList"></div>
 
     <h3 class="logo-font" style="font-size:13px; margin-top:10px; opacity:0.6;">ROOM DETAILS</h3>
     <div class="editable-group">
@@ -231,7 +246,10 @@
     currentUser = session?.user;
 
     const { data, error } = await supabaseClient.from("hostels").select("*").eq("id", currentRoomId).single();
-    if (error) return document.getElementById("loadingMsg").innerText = "Room not found.";
+    if (error) {
+        console.error("Fetch Error:", error);
+        return document.getElementById("loadingMsg").innerText = "Room not found.";
+    }
     
     roomData = data;
     document.getElementById("loadingMsg").style.display = "none";
@@ -243,6 +261,7 @@
       document.querySelectorAll(".edit-icon").forEach(el => el.style.display = "inline");
       document.getElementById("deleteBtn").style.display = "block";
       document.getElementById("ownerImageAction").style.display = "block";
+      document.getElementById("addInstBtn").style.display = "block";
     }
   }
 
@@ -263,14 +282,19 @@
   function renderInstitutions() {
     const instList = document.getElementById("instituteList");
     instList.innerHTML = "";
-    if(roomData.nearby_institutions?.length > 0) {
+    // Ensure nearby_institutions exists before looping
+    if(roomData.nearby_institutions && Array.isArray(roomData.nearby_institutions) && roomData.nearby_institutions.length > 0) {
       roomData.nearby_institutions.forEach((inst, i) => {
         instList.innerHTML += `
             <div class="inst-item">
                 <span>🎓 ${inst.name}</span>
-                <div style="display:flex; align-items:center; gap:10px;">
+                <div style="display:flex; align-items:center; gap:12px;">
                     <strong>${inst.dist} km</strong>
-                    ${currentUser?.id === roomData.user_id ? `<span style="color:#ef4444; cursor:pointer;" onclick="removeInstitution(${i})">-</span>` : ''}
+                    ${currentUser?.id === roomData.user_id ? `
+                    <svg class="remove-inst-btn" onclick="removeInstitution(${i})" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>` : ''}
                 </div>
             </div>`;
       });
@@ -285,18 +309,36 @@
   }
 
   async function addInstitution() {
-    const name = document.getElementById('newInstName').value;
-    const dist = document.getElementById('newInstDist').value;
-    if(!name || !dist) return;
-    const newList = [...(roomData.nearby_institutions || []), { name, dist }];
+    const name = document.getElementById('newInstName').value.trim();
+    const dist = document.getElementById('newInstDist').value.trim();
+    if(!name || !dist) return alert("Fill both fields");
+
+    const submitBtn = document.getElementById('submitInstBtn');
+    submitBtn.innerText = "⏳";
+
+    const newList = Array.isArray(roomData.nearby_institutions) ? [...roomData.nearby_institutions, { name, dist }] : [{ name, dist }];
+    
     const { error } = await supabaseClient.from("hostels").update({ nearby_institutions: newList }).eq("id", currentRoomId);
-    if(!error) { roomData.nearby_institutions = newList; renderInstitutions(); toggleInstForm(); }
+
+    if(!error) { 
+        roomData.nearby_institutions = newList; 
+        renderInstitutions(); 
+        toggleInstForm();
+        document.getElementById('newInstName').value = "";
+        document.getElementById('newInstDist').value = "";
+    } else {
+        console.error("Update Error:", error);
+        alert("Failed to save: " + error.message);
+    }
+    submitBtn.innerText = "ADD";
   }
 
   async function removeInstitution(index) {
+    if(!confirm("Remove this institution?")) return;
     const newList = roomData.nearby_institutions.filter((_, i) => i !== index);
     const { error } = await supabaseClient.from("hostels").update({ nearby_institutions: newList }).eq("id", currentRoomId);
     if(!error) { roomData.nearby_institutions = newList; renderInstitutions(); }
+    else { alert("Failed to remove: " + error.message); }
   }
 
   /* --- GALLERY & IMAGES --- */
@@ -320,20 +362,25 @@
       wrapper.className = "thumb-wrapper";
       wrapper.innerHTML = `
         <img src="${url}" class="thumb-img ${i === currentImageIndex ? 'active' : ''}" onclick="currentImageIndex = ${i}; updateMainImage();">
-        ${currentUser?.id === roomData.user_id ? `<span class="delete-thumb" onclick="removeImage(${i})">-</span>` : ''}
+        ${currentUser?.id === roomData.user_id ? `
+        <div class="delete-action-btn" onclick="removeImage(${i})">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="4"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>` : ''}
       `;
       thumbRow.appendChild(wrapper);
     });
   }
 
   function changeImage(direction) {
-    const urls = roomData.image_urls;
+    const urls = roomData.image_urls || [];
+    if(urls.length === 0) return;
     currentImageIndex = (currentImageIndex + direction + urls.length) % urls.length;
     updateMainImage();
   }
 
   function updateMainImage() {
-    document.getElementById("mainRoomImage").src = roomData.image_urls[currentImageIndex];
+    const urls = roomData.image_urls || [];
+    document.getElementById("mainRoomImage").src = urls[currentImageIndex];
     document.querySelectorAll(".thumb-img").forEach((t, i) => t.classList.toggle("active", i === currentImageIndex));
   }
 
@@ -342,10 +389,10 @@
     const btn = document.getElementById("uploadPhotosBtn");
     btn.innerText = "UPLOADING...";
     
-    const newUrls = [...(roomData.image_urls || [])];
+    const newUrls = Array.isArray(roomData.image_urls) ? [...roomData.image_urls] : [];
     for (let f of files) {
       const path = `${currentUser.id}/${Date.now()}-${f.name}`;
-      const { data } = await supabaseClient.storage.from('item-images').upload(path, f);
+      const { data, error } = await supabaseClient.storage.from('item-images').upload(path, f);
       if(data) {
         const { data: pUrl } = supabaseClient.storage.from('item-images').getPublicUrl(path);
         newUrls.push(pUrl.publicUrl);
@@ -354,25 +401,27 @@
     
     const { error } = await supabaseClient.from("hostels").update({ image_urls: newUrls }).eq("id", currentRoomId);
     if(!error) { roomData.image_urls = newUrls; renderGallery(); }
-    btn.innerText = "+ UPLOAD MORE PHOTOS";
+    else { alert("Photo upload failed: " + error.message); }
+    btn.innerText = "+ ADD MORE PHOTOS";
   }
 
   async function removeImage(index) {
+    if(!confirm("Delete this photo?")) return;
     const newUrls = roomData.image_urls.filter((_, i) => i !== index);
     const { error } = await supabaseClient.from("hostels").update({ image_urls: newUrls }).eq("id", currentRoomId);
     if(!error) { 
         roomData.image_urls = newUrls; 
         currentImageIndex = 0;
         renderGallery(); 
-    }
+    } else { alert("Failed to delete photo: " + error.message); }
   }
 
-  /* --- EDITING --- */
+  /* --- GENERAL EDITING --- */
   function startEdit(fieldId) {
     document.getElementById(fieldId + "Display").style.display = "none";
     document.getElementById(fieldId + "Edit").style.display = "block";
     const mapping = { roomTitle: 'hostel_name', roomRent: 'rent', roomLocation: 'location', roomDescription: 'sharing_type' };
-    document.getElementById(fieldId + "Input").value = roomData[mapping[fieldId]];
+    document.getElementById(fieldId + "Input").value = roomData[mapping[fieldId]] || '';
   }
 
   function cancelEdit(fieldId) {
@@ -382,15 +431,23 @@
 
   async function saveEdit(dbField, fieldId) {
     const newValue = document.getElementById(fieldId + "Input").value.trim();
-    if(!newValue) return;
+    if(!newValue && dbField !== 'sharing_type') return alert("Field cannot be empty");
+    
     const { error } = await supabaseClient.from("hostels").update({ [dbField]: newValue }).eq("id", currentRoomId);
-    if (!error) { roomData[dbField] = newValue; updateUI(); cancelEdit(fieldId); }
+    if (!error) { 
+        roomData[dbField] = newValue; 
+        updateUI(); 
+        cancelEdit(fieldId); 
+    } else {
+        alert("Save failed: " + error.message);
+    }
   }
 
   async function deleteRoom() {
     if (!confirm("Remove room listing permanently?")) return;
     const { error } = await supabaseClient.from("hostels").delete().eq("id", currentRoomId);
     if (!error) window.location.href = "hostel.html";
+    else alert("Deletion failed: " + error.message);
   }
 
   init();
