@@ -6,17 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     /* --- GLOBAL --- */
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=2069&auto=format&fit=crop');
+      background-image: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85)), url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=2069');
       background-size: cover;
       background-position: center;
+      background-attachment: fixed;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -25,52 +25,62 @@
       box-sizing: border-box;
     }
 
+    .logo-font { font-family: 'Outfit', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
+
     /* --- LOGIN CARD --- */
     .card {
       background: white;
-      padding: 40px 32px;
+      padding: 45px 35px;
       width: 100%;
-      max-width: 400px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      max-width: 420px;
+      border-radius: 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       box-sizing: border-box;
       transition: all 0.3s ease;
     }
 
-    .brand { text-align: center; font-size: 24px; font-weight: 800; color: #2563eb; letter-spacing: -0.5px; margin-bottom: 8px; }
-    .card h2 { margin: 0 0 8px 0; font-size: 26px; color: #0f172a; text-align: center; font-weight: 700; letter-spacing: -0.5px; }
-    .subtitle { text-align: center; color: #64748b; font-size: 14px; margin-bottom: 28px; }
+    .brand { text-align: center; font-size: 22px; color: #000000; margin-bottom: 12px; }
+    .card h2 { margin: 0 0 10px 0; font-size: 32px; color: #0f172a; text-align: center; font-family: 'Outfit', sans-serif; font-weight: 800; }
+    .subtitle { text-align: center; color: #64748b; font-size: 15px; margin-bottom: 35px; font-weight: 400; line-height: 1.5; }
 
     /* --- INPUTS --- */
-    .form-group { margin-bottom: 16px; }
-    label { display: block; font-size: 13px; font-weight: 600; color: #4b5563; margin-bottom: 6px; }
-    input { width: 100%; padding: 12px 14px; font-size: 15px; font-family: inherit; border: 1px solid #d1d5db; border-radius: 10px; box-sizing: border-box; background: #f8fafc; transition: all 0.2s ease; }
-    input:focus { outline: none; border-color: #2563eb; background: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: 11px; font-weight: 800; color: #0f172a; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+    input { 
+      width: 100%; padding: 14px 16px; font-size: 15px; font-family: 'Inter', sans-serif; 
+      border: 1.5px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; 
+      background: #f8fafc; transition: all 0.2s ease; color: #0f172a;
+    }
+    input:focus { outline: none; border-color: #000000; background: white; box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05); }
 
-    /* Helper container to smoothly hide/show extra fields */
     #registerFields {
       display: none;
     }
 
-    /* --- BUTTONS & LINKS --- */
-    button { width: 100%; margin-top: 12px; padding: 14px; background: #2563eb; color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-    button:hover:not(:disabled) { background: #1d4ed8; }
+    /* --- BLACK BUTTON --- */
+    button { 
+      width: 100%; margin-top: 15px; padding: 16px; 
+      background: #000000; color: white; border: none; 
+      border-radius: 12px; font-size: 14px; font-weight: 700; cursor: pointer; 
+      transition: 0.3s; font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 1px;
+    }
+    button:hover:not(:disabled) { background: #333333; transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.3); }
     button:disabled { background: #9ca3af; cursor: not-allowed; }
 
-    .toggle-container { text-align: center; margin-top: 24px; font-size: 14px; color: #4b5563; }
-    .toggle-link { color: #2563eb; font-weight: 600; cursor: pointer; text-decoration: none; transition: color 0.2s; }
-    .toggle-link:hover { color: #1d4ed8; text-decoration: underline; }
+    .toggle-container { text-align: center; margin-top: 30px; font-size: 14px; color: #64748b; }
+    .toggle-link { color: #000000; font-weight: 700; cursor: pointer; text-decoration: none; transition: color 0.2s; margin-left: 5px; }
+    .toggle-link:hover { text-decoration: underline; }
 
-    #msg { margin-top: 16px; text-align: center; font-size: 14px; font-weight: 500; min-height: 20px; border-radius: 8px; padding: 10px; display: none; }
-    .msg-error { background: #fef2f2; color: #ef4444; display: block !important;}
-    .msg-success { background: #f0fdf4; color: #16a34a; display: block !important;}
-    .msg-loading { background: #f8fafc; color: #64748b; display: block !important;}
+    #msg { margin-top: 20px; text-align: center; font-size: 13px; font-weight: 600; border-radius: 12px; padding: 12px; display: none; }
+    .msg-error { background: #fef2f2; color: #ef4444; display: block !important; border: 1px solid #fee2e2; }
+    .msg-success { background: #f0fdf4; color: #16a34a; display: block !important; border: 1px solid #dcfce7; }
+    .msg-loading { background: #f8fafc; color: #64748b; display: block !important; border: 1px solid #e2e8f0; }
   </style>
 </head>
 <body>
 
 <div class="card">
-  <div class="brand">Hostel Mart</div>
+  <div class="brand logo-font">Hostel Mart</div>
   <h2 id="title">Welcome back</h2>
   <div class="subtitle" id="subtitle">Enter your details to access your account.</div>
 
@@ -124,7 +134,7 @@
   const toggleTextEl = document.getElementById("toggleText");
   const toggleLinkEl = document.getElementById("toggleLink");
   const msgEl = document.getElementById("msg");
-  const registerFieldsEl = document.getElementById("registerFields"); // 🆕 Grab the new fields container
+  const registerFieldsEl = document.getElementById("registerFields");
 
   /* ================= TOGGLE UI MODE ================= */
   toggleLinkEl.onclick = () => {
@@ -134,16 +144,14 @@
     msgEl.innerText = "";
     
     if (isLogin) {
-      // LOGIN MODE
-      registerFieldsEl.style.display = "none"; // Hide extra fields
+      registerFieldsEl.style.display = "none";
       titleEl.innerText = "Welcome back";
       subtitleEl.innerText = "Enter your details to access your account.";
       btnEl.innerText = "Sign In";
       toggleTextEl.innerText = "Don't have an account?";
       toggleLinkEl.innerText = "Sign up";
     } else {
-      // REGISTER MODE
-      registerFieldsEl.style.display = "block"; // Show extra fields
+      registerFieldsEl.style.display = "block";
       titleEl.innerText = "Create an account";
       subtitleEl.innerText = "Sign up to start buying and selling on campus.";
       btnEl.innerText = "Create Account";
@@ -157,7 +165,6 @@
     const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    // Basic Validation
     if (!email || !password) {
       msgEl.innerText = "Email and password are required.";
       msgEl.className = "msg-error";
@@ -178,10 +185,8 @@
     let result;
 
     if (isLogin) {
-      // 1. LOGIN REQUEST
       result = await supabaseClient.auth.signInWithPassword({ email, password });
     } else {
-      // 2. REGISTER REQUEST
       const fullName = document.getElementById("fullName").value.trim();
       const username = document.getElementById("username").value.trim();
 
@@ -193,7 +198,6 @@
         return;
       }
 
-      // ✨ Save extra info into Supabase's user_metadata
       result = await supabaseClient.auth.signUp({ 
         email, 
         password,

@@ -31,6 +31,7 @@
     .profile-btn { 
       border: 1.5px solid var(--divider); background: var(--profile-bg); border-radius: 50%; width: 40px; height: 40px; 
       display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; overflow: hidden;
+      padding: 0;
     }
     .profile-btn img { width: 100%; height: 100%; object-fit: cover; }
     
@@ -58,57 +59,47 @@
     .search-container input:focus { border-color: var(--btn-border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
     .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
     
-    /* --- GRID & CARDS --- */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 35px; }
+    /* --- GRID & REDUCED CARDS --- */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
     .hostel-card { 
-      background: var(--card); border-radius: 24px; overflow: hidden; border: 1px solid var(--divider); 
-      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); display: flex; flex-direction: column; 
+      background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid var(--divider); 
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease; 
+      display: flex; flex-direction: column; 
     }
-    .hostel-card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px -12px rgba(0,0,0,0.12); border-color: var(--btn-border); }
+    /* Unified Hover: The whole card lifts */
+    .hostel-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.12); border-color: var(--btn-border); }
     
-    .card-img { width: 100%; height: 230px; object-fit: cover; background: var(--divider); transition: 0.6s; cursor: pointer; }
-    .hostel-card:hover .card-img { transform: scale(1.05); }
+    .card-img { width: 100%; height: 180px; object-fit: cover; background: var(--divider); cursor: pointer; }
+    /* Removed image-only scale on hover */
     
-    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; margin-right: 6px; font-family: 'Outfit'; letter-spacing: 0.5px; }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 50px; font-size: 9px; font-weight: 800; text-transform: uppercase; margin-right: 4px; font-family: 'Outfit'; letter-spacing: 0.5px; }
     .badge-date { background: #fee2e2; color: #ef4444; }
     .badge-food { background: #dcfce7; color: #16a34a; }
     
-    .card-content { padding: 25px; flex: 1; }
-    .card-content h2 { margin: 0 0 10px 0; font-family: 'Outfit'; font-size: 22px; cursor: pointer; line-height: 1.2; }
-    .price { font-family: 'Outfit'; font-size: 24px; font-weight: 700; color: #10b981; margin: 15px 0; }
+    .card-content { padding: 20px; flex: 1; }
+    .card-content h2 { margin: 0 0 6px 0; font-family: 'Outfit'; font-size: 18px; cursor: pointer; line-height: 1.2; }
+    .price { font-family: 'Outfit'; font-size: 20px; font-weight: 700; color: #10b981; margin: 10px 0; }
     
     .nearby-tag { 
-      display: inline-block; font-size: 11px; background: rgba(37, 99, 235, 0.08); color: var(--accent);
-      padding: 4px 10px; border-radius: 6px; margin: 2px; font-weight: 600; font-family: 'Outfit';
+      display: inline-block; font-size: 10px; background: rgba(37, 99, 235, 0.08); color: var(--accent);
+      padding: 3px 8px; border-radius: 6px; margin: 2px; font-weight: 600; font-family: 'Outfit';
     }
 
     /* --- MODAL --- */
     .modal-overlay { position: fixed; inset: 0; background: var(--modal-bg); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px); }
     .modal-overlay.active { display: flex; }
-    .modal { 
-      background: var(--card); width: 95%; max-width: 600px; padding: 40px; border-radius: 30px; 
-      position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid var(--divider); 
-    }
+    .modal { background: var(--card); width: 95%; max-width: 600px; padding: 40px; border-radius: 30px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid var(--divider); }
     .close-modal { position: absolute; top: 25px; right: 25px; cursor: pointer; font-size: 22px; color: var(--text-muted); transition: 0.2s; }
-    
     .form-group { margin-bottom: 22px; }
     label { display: block; font-size: 11px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-    input, select, textarea { 
-      width: 100%; padding: 14px 18px; border: 1.5px solid var(--divider); border-radius: 12px; 
-      background: var(--bg); color: var(--text); box-sizing: border-box; font-family: inherit; transition: 0.3s; outline: none;
-    }
-    input:focus { border-color: var(--btn-border); }
+    input, select, textarea { width: 100%; padding: 14px 18px; border: 1.5px solid var(--divider); border-radius: 12px; background: var(--bg); color: var(--text); box-sizing: border-box; font-family: inherit; transition: 0.3s; outline: none; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-
-    .nearby-input-row { display: grid; grid-template-columns: 1fr 100px auto; gap: 10px; margin-bottom: 12px; align-items: center; }
-    .nearby-list { margin-bottom: 20px; border: 1.5px dashed var(--divider); padding: 15px; border-radius: 16px; background: var(--profile-bg); }
-    .nearby-item { display: flex; justify-content: space-between; padding: 8px 12px; background: var(--card); border-radius: 10px; margin-bottom: 6px; font-size: 13px; font-weight: 600; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
 
     .preview-container { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
     .preview-wrapper { width: 70px; height: 70px; border-radius: 12px; overflow: hidden; border: 1px solid var(--divider); }
     .preview-img { width: 100%; height: 100%; object-fit: cover; }
 
-    @media (max-width: 600px) { .form-row, .nearby-input-row { grid-template-columns: 1fr; } .container { margin-top: 20px; } }
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -120,7 +111,8 @@
 <header>
   <div class="header-left">
     <div class="profile-btn" onclick="location.href='index.html'">
-      <svg class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+      <img id="headerAvatarImg" src="" style="display: none;">
+      <svg id="headerAvatarFallback" class="icon-svg" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
     </div>
     <h2 class="logo-font" style="margin: 0; font-size: 20px; cursor: pointer;" onclick="location.href='index.html'">Hostel Mart</h2>
   </div>
@@ -166,8 +158,8 @@
         <label>Nearest Institutions</label>
         <div id="institutionsList" class="nearby-list" style="display:none;"></div>
         <div class="nearby-input-row">
-            <input type="text" id="instName" placeholder="College name">
-            <input type="text" id="instDist" placeholder="KM">
+            <input type="text" id="instName" placeholder="College name" style="width: 60%;">
+            <input type="text" id="instDist" placeholder="KM" style="width: 20%;">
             <button class="btn btn-sm" onclick="addInstitution()">ADD</button>
         </div>
     </div>
@@ -196,6 +188,12 @@
   async function checkAuth() {
     const { data } = await supabaseClient.auth.getSession();
     currentUser = data.session?.user;
+    if (currentUser?.user_metadata?.avatar_url) {
+      document.getElementById('headerAvatarImg').src = currentUser.user_metadata.avatar_url;
+      document.getElementById('headerAvatarImg').style.display = 'block';
+      document.getElementById('headerAvatarFallback').style.display = 'none';
+    }
+    loadHostels();
   }
 
   function addInstitution() {
@@ -261,27 +259,28 @@
     list.forEach(h => {
       const date = new Date(h.vacating_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       let tags = h.nearby_institutions ? h.nearby_institutions.slice(0, 2).map(i => `<span class="nearby-tag">🎓 ${i.name}</span>`).join('') : "";
-      
+      const isOwner = currentUser && h.user_id === currentUser.id;
+      const buttonLabel = isOwner ? 'EDIT LISTING' : 'VIEW DETAILS';
+
       const div = document.createElement('div');
       div.className = 'hostel-card';
       div.innerHTML = `
         <img src="${h.image_urls?.[0] || 'https://via.placeholder.com/400x230'}" class="card-img" onclick="viewRoom('${h.id}')">
         <div class="card-content">
-          <div style="margin-bottom:12px;">
+          <div style="margin-bottom:8px;">
             <span class="badge badge-date">
-              <svg class="icon-svg" style="width: 10px; height: 10px; margin-right: 4px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+              <svg class="icon-svg" style="width: 9px; height: 9px; margin-right: 3px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
               From ${date}
             </span>
             <span class="badge badge-food">${h.food_status}</span>
           </div>
           <h2 class="logo-font" onclick="viewRoom('${h.id}')">${h.hostel_name}</h2>
-          <div style="color:var(--text-muted); font-size:13px; margin-bottom:10px; font-weight:500; display: flex; align-items: center; gap: 5px;">
-             <svg class="icon-svg" style="width: 14px; height: 14px; opacity: 0.7;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <div style="color:var(--text-muted); font-size:12px; margin-bottom:8px; font-weight:500;">
              ${h.location}
           </div>
-          <div style="margin-bottom:15px; display:flex; flex-wrap:wrap; gap:4px;">${tags}</div>
-          <div class="price">₹${h.rent}<span style="font-size:12px; opacity:0.6; font-weight:500;"> / month</span></div>
-          <button class="btn btn-sm" style="width:100%; margin-top:10px;" onclick="viewRoom('${h.id}')">VIEW DETAILS</button>
+          <div style="margin-bottom:10px; display:flex; flex-wrap:wrap; gap:4px;">${tags}</div>
+          <div class="price">₹${h.rent}<span style="font-size:11px; opacity:0.6; font-weight:500;"> / month</span></div>
+          <button class="btn btn-sm" style="width:100%; margin-top:5px;" onclick="viewRoom('${h.id}')">${buttonLabel}</button>
         </div>
       `;
       grid.appendChild(div);
@@ -318,7 +317,6 @@
   }
 
   checkAuth();
-  loadHostels();
 </script>
 </body>
 </html>
