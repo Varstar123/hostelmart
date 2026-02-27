@@ -2,133 +2,100 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Sell Item | Student Marketplace</title>
+  <title>Sell Item | Hostel Mart</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link rel="icon" type="image/png" href="hm.png">
 
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="global.js" defer></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800;900&display=swap" rel="stylesheet">
 
   <style>
-    /* --- CSS VARIABLES FOR THEME SWITCHING --- */
+    /* --- MODERN CSS VARIABLES --- */
     :root {
-      --bg-main: #f8fafc;
-      --bg-header: white;
-      --text-main: #0f172a;
-      --text-muted: #64748b;
-      --card-bg: white;
-      --card-border: #f1f5f9;
-      --divider: #e2e8f0;
+      --bg: #ffffff; --card: #ffffff; --text: #0f172a; --text-muted: #64748b;
+      --accent: #2563eb; --divider: #e2e8f0; 
+      --btn-border: #0f172a; --btn-text: #0f172a; --btn-hover-bg: #0f172a;
+      --btn-hover-text: #ffffff;
     }
 
     body.dark-mode {
-      --bg-main: #0f172a;
-      --bg-header: #1e293b;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --card-bg: #1e293b;
-      --card-border: #334155;
-      --divider: #334155;
+      --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --text-muted: #94a3b8;
+      --divider: #334155; --btn-border: #ffffff; --btn-text: #ffffff;
+      --btn-hover-bg: #ffffff; --btn-hover-text: #0f172a;
     }
 
-    /* --- GLOBAL & CONTAINERS --- */
-    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; box-sizing: border-box; transition: background 0.3s, color 0.3s; }
-    .container { width: 100%; max-width: 440px; }
-    
-    .header-link { display: inline-block; margin-bottom: 16px; color: var(--text-muted); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
-    .header-link:hover { color: var(--text-main); }
-    
-    .card { background: var(--card-bg); padding: 32px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid var(--card-border); transition: background 0.3s, border-color 0.3s; }
-    .card h2 { margin: 0 0 24px 0; font-size: 24px; color: var(--text-main); text-align: center; transition: color 0.3s; }
-    
-    /* --- FORMS & INPUTS --- */
-    .form-group { margin-bottom: 16px; }
-    .form-row { display: flex; gap: 16px; margin-bottom: 16px; }
-    .form-row .form-group { margin-bottom: 0; flex: 1; }
-    label { display: block; font-size: 13px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; transition: color 0.3s; }
-    
-    input, textarea, select { width: 100%; padding: 12px 14px; font-size: 14px; font-family: inherit; border: 1px solid var(--card-border); border-radius: 8px; box-sizing: border-box; background: var(--bg-main); color: var(--text-main); transition: all 0.2s ease; }
-    input:focus, textarea:focus, select:focus { outline: none; border-color: #2563eb; background: var(--card-bg); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-    textarea { resize: vertical; min-height: 100px; }
-    
-    /* --- LOCATION INPUT WRAPPER --- */
-    .input-wrapper { display: flex; gap: 8px; align-items: stretch; }
-    .input-wrapper input { flex: 1; font-variant-numeric: tabular-nums; }
-    .loc-btn { flex-shrink: 0; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 0 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 16px; color: var(--text-main); }
-    .loc-btn:hover { background: var(--bg-main); color: #2563eb; border-color: #2563eb; }
-    .loc-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; flex-direction: column; min-height: 100vh; transition: background 0.3s ease; }
+    .logo-font { font-family: 'Outfit', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
 
-    /* --- CUSTOM FILE UPLOAD STYLES --- */
-    .file-input-hidden { display: none; }
-    .file-upload-wrapper { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
-    .file-upload-btn { background: var(--card-bg); color: var(--text-main); border: 1px solid var(--card-border); padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-block; text-align: center; }
-    .file-upload-btn:hover { background: var(--bg-main); border-color: var(--text-muted); }
-    .file-name-display { font-size: 13px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; transition: color 0.3s; }
-    .upload-helper { display: block; font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    /* --- PREMIUM HEADER --- */
+    header { padding: 14px 5%; background: var(--card); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 0 var(--divider); position: sticky; top: 0; z-index: 100; }
+    .site-logo { height: 30px; width: auto; cursor: pointer; }
+    .icon-svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* ✨ NEW: IMAGE PREVIEW & DELETE STYLES */
-    .preview-container { display: flex; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
-    .preview-wrapper { position: relative; display: inline-block; }
-    .preview-img { width: 65px; height: 65px; object-fit: cover; border-radius: 8px; border: 1px solid var(--card-border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: opacity 0.2s; }
-    
-    .remove-btn { 
-      position: absolute; 
-      top: -6px; 
-      right: -6px; 
-      background: #ef4444; 
-      color: white; 
-      border: none; 
-      border-radius: 50%; 
-      width: 22px; 
-      height: 22px; 
-      font-size: 16px; 
-      font-weight: bold; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      cursor: pointer; 
-      opacity: 0; /* Hidden by default */
-      transition: all 0.2s; 
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
-      line-height: 1; 
-      padding: 0;
-      padding-bottom: 2px; /* Centers the minus sign visually */
+    /* --- BUTTONS --- */
+    .btn { 
+      padding: 10px 22px; border-radius: 8px; border: 1.5px solid var(--btn-border); background: transparent; color: var(--btn-text); 
+      font-weight: 700; font-size: 13px; text-decoration: none; transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+      font-family: 'Outfit', sans-serif; letter-spacing: 0.5px; outline: none; text-transform: uppercase;
     }
-    
-    .remove-btn:hover { transform: scale(1.1); background: #dc2626; }
-    
-    /* The hover effect! */
-    .preview-wrapper:hover .preview-img { opacity: 0.8; }
-    .preview-wrapper:hover .remove-btn { opacity: 1; }
+    .btn:hover { background: var(--btn-hover-bg); color: var(--btn-hover-text); transform: translateY(-2px); }
+    .btn-secondary { border-color: var(--divider); color: var(--text); }
+    .btn-sm { padding: 8px 14px; font-size: 11px; }
 
-    button#postBtn { width: 100%; margin-top: 10px; padding: 14px; background: #2563eb; color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-    button#postBtn:hover:not(:disabled) { background: #1d4ed8; }
-    button#postBtn:disabled { background: #9ca3af; cursor: not-allowed; }
-    #msg { margin-top: 16px; text-align: center; font-size: 14px; font-weight: 500; min-height: 20px; }
+    /* --- LAYOUT --- */
+    .container { max-width: 600px; margin: 40px auto; padding: 0 5%; width: 100%; box-sizing: border-box; }
+    .sell-card { background: var(--card); padding: 40px; border-radius: 30px; border: 1px solid var(--divider); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+
+    /* --- FORM STYLING --- */
+    .form-group { margin-bottom: 22px; }
+    label { display: block; font-size: 11px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    input, select, textarea { width: 100%; padding: 14px 18px; border: 1.5px solid var(--divider); border-radius: 12px; background: var(--bg); color: var(--text); box-sizing: border-box; font-family: inherit; transition: 0.3s; outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: var(--btn-border); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+    /* --- PREVIEWS --- */
+    .preview-container { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
+    .preview-wrapper { position: relative; width: 70px; height: 70px; border-radius: 12px; overflow: hidden; border: 1px solid var(--divider); }
+    .preview-img { width: 100%; height: 100%; object-fit: cover; }
+    .remove-btn { position: absolute; top: 2px; right: 2px; background: #ef4444; color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+
+    #submitBtn { width: 100%; padding: 16px; background: var(--btn-border); color: var(--bg); border: none; border-radius: 12px; font-family: 'Outfit'; font-size: 15px; font-weight: 700; cursor: pointer; transition: 0.3s; margin-top: 10px; }
+    #submitBtn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(0,0,0,0.3); }
+    #submitBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    #statusMsg { margin-top: 15px; text-align: center; font-size: 13px; font-weight: 600; font-family: 'Outfit'; }
+
+    @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } .sell-card { padding: 25px; border-radius: 20px; } }
   </style>
 </head>
 <body>
 
 <script>
-  if (localStorage.getItem('theme') === 'dark') {
-    document.body.classList.add('dark-mode');
-  }
+  if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
 </script>
 
-<div class="container">
-  <a href="index.html" class="header-link">← Back to Marketplace</a>
-  
-  <div class="card">
-    <h2>Sell an Item</h2>
+<header>
+  <img src="hm.png" class="site-logo" alt="Hostel Mart" onclick="location.href='index.html'">
+  <a href="index.html" class="btn btn-secondary btn-sm">
+    <svg class="icon-svg" style="width:12px; height:12px;"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back to Mart
+  </a>
+</header>
 
+<div class="container">
+  <div class="sell-card">
+    <h2 class="logo-font" style="margin-top:0; font-size: 26px; border-bottom: 1px solid var(--divider); padding-bottom: 15px; margin-bottom: 25px;">Post Listing</h2>
+    
     <div class="form-group">
-      <label for="title">Item Title</label>
-      <input id="title" placeholder="e.g., Mini Fridge, Textbook" />
+      <label>Item Name</label>
+      <input id="title" placeholder="What are you selling?">
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="category">Category</label>
+        <label>Category</label>
         <select id="category">
           <option value="">Select...</option>
           <option value="Furniture">Furniture</option>
@@ -137,70 +104,70 @@
           <option value="Other">Other</option>
         </select>
       </div>
-      
       <div class="form-group">
-        <label for="price">Price (₹)</label>
-        <input id="price" type="number" placeholder="0.00" min="0" />
+        <label>Price (₹)</label>
+        <input type="number" id="price" placeholder="0">
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="contact">Contact Number</label>
-        <input id="contact" type="tel" placeholder="e.g., +91 9876543210" />
+        <label>Contact Number</label>
+        <input id="contact" type="tel" placeholder="+91 0000000000">
       </div>
-      
       <div class="form-group">
-        <label for="location">Location</label>
-        <div class="input-wrapper">
-          <input id="location" placeholder="City, District, State • " />
-          <button type="button" id="getLocationBtn" class="loc-btn" title="Use current location">📍</button>
+        <label>Location</label>
+        <div style="display: flex; gap: 8px;">
+          <input id="location" placeholder="City, District, State • ">
+          <button type="button" id="getLocationBtn" class="btn btn-secondary btn-sm" style="padding: 0 12px;" title="Use GPS">
+            <svg class="icon-svg"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          </button>
         </div>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="description">Description</label>
-      <textarea id="description" placeholder="Describe the condition, age, etc."></textarea>
+      <label>Description</label>
+      <textarea id="description" placeholder="Condition, usage time, details..." rows="3"></textarea>
     </div>
 
-    <div class="form-group">
-      <label>Upload Images</label>
-      <div class="file-upload-wrapper">
-        <input type="file" id="imageFile" class="file-input-hidden" accept="image/png, image/jpeg, image/webp" multiple />
-        <label for="imageFile" class="file-upload-btn">📂 Choose Images</label>
-        <span id="fileName" class="file-name-display">No files chosen</span>
-      </div>
-      <span class="upload-helper">Max 4 images. Under 2MB each.</span>
-      
-      <div id="previewContainer" class="preview-container"></div>
-    </div>
+    <div class="form-group" style="margin-bottom: 30px;">
+    <label style="margin-bottom: 12px; display: block; font-family: 'Outfit';">Photos (Max 4)</label>
+    <input type="file" id="imageFile" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
+    
+    <button type="button" class="btn btn-secondary btn-sm" 
+            style="width: 100%; border: 1.5px dashed var(--divider); background: var(--input-bg); justify-content: center; margin-top: 5px; padding: 20px; display: flex; align-items: center; gap: 12px; border-radius: 12px; transition: 0.3s;" 
+            onclick="document.getElementById('imageFile').click()">
+        <svg class="icon-svg" viewBox="0 0 24 24" style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.7;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+        </svg>
+        <span style="font-family: 'Outfit'; font-weight: 600; color: var(--text-muted);">Select Images</span>
+    </button>
 
-    <button id="postBtn">Post Item</button>
-    <div id="msg"></div>
+    <div id="previewContainer" class="preview-container" style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;"></div>
+</div>
+
+    <button id="submitBtn" class="logo-font">PUBLISH LISTING</button>
+    <p id="statusMsg" style="text-align: center; font-size: 13px; margin-top: 15px; font-weight: 600;"></p>
   </div>
 </div>
 
 <script>
-  /* ================= CONFIG ================= */
   const SUPABASE_URL = "https://uluwxacapyysyuwpmqtz.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdXd4YWNhcHl5c3l1d3BtcXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODc0ODQsImV4cCI6MjA4NzI2MzQ4NH0.8dOeocJ5Q2tKy6gDu7rAmWgQqv_oetEXSGH2kWljZJo";
-
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   let currentUser = null;
+  let selectedFilesArray = [];
 
   async function checkAuth() {
     const { data } = await supabaseClient.auth.getSession();
-    if (!data.session) {
-      location.href = "login.html";
-      return;
-    }
+    if (!data.session) { location.href = "login.html"; return; }
     currentUser = data.session.user;
   }
   checkAuth();
 
-  /* ================= ANIMATED PLACEHOLDER TICKER ================= */
+  /* ================= PRESERVED PLACEHOLDER TICKER ================= */
   const locInput = document.getElementById("location");
   const scrollText = "City, District, State • ";
   let scrollIndex = 0;
@@ -210,236 +177,105 @@
     if (!isFetchingLocation && locInput.value === "" && document.activeElement !== locInput) {
       locInput.placeholder = scrollText.substring(scrollIndex) + scrollText.substring(0, scrollIndex);
       scrollIndex = (scrollIndex + 1) % scrollText.length;
-    } else if (!isFetchingLocation) {
+    } else if (!isFetchingLocation && locInput.value === "") {
       locInput.placeholder = "City, District, State";
     }
   }, 180); 
 
-  /* ================= NEW LOCATION LOGIC ================= */
+  /* ================= GPS LOGIC ================= */
   const locBtn = document.getElementById("getLocationBtn");
-
-  locBtn.addEventListener("click", () => {
-    if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser");
-      return;
-    }
-
-    isFetchingLocation = true; 
-    locBtn.disabled = true;
+  locBtn.onclick = () => {
+    if (!navigator.geolocation) return alert("Geolocation not supported");
+    isFetchingLocation = true;
+    const originalIcon = locBtn.innerHTML;
     locBtn.innerText = "⏳";
     locInput.placeholder = "Fetching...";
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const { latitude, longitude } = position.coords;
-        try {
-          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
-          const data = await response.json();
-          
-          if (data && data.address) {
-            const city = data.address.city || data.address.town || data.address.village || "";
-            const district = data.address.state_district || data.address.county || "";
-            const state = data.address.state || "";
-
-            const locationParts = [city, district, state].filter(Boolean);
-            const uniqueParts = [...new Set(locationParts)]; 
-            const finalAddress = uniqueParts.join(", ");
-            
-            locInput.value = finalAddress || data.display_name.split(",").slice(-3).join(", "); 
-          } else {
-            locInput.value = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`; 
-          }
-        } catch (error) {
-          alert("Could not fetch address details.");
-          locInput.value = `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`;
-        }
-        
-        isFetchingLocation = false;
-        locBtn.innerText = "📍";
-        locBtn.disabled = false;
-      },
-      (error) => {
-        alert("Location access denied or unavailable.");
-        isFetchingLocation = false;
-        locBtn.innerText = "📍";
-        locBtn.disabled = false;
-      }
-    );
-  });
-
-  /* ================= ✨ BACKGROUND ARRAY FOR FILES ✨ ================= */
-  let selectedFilesArray = []; 
-  const fileInput = document.getElementById("imageFile");
-  const fileNameDisplay = document.getElementById("fileName");
-  const previewContainer = document.getElementById("previewContainer");
-  const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
-
-  fileInput.addEventListener("change", function() {
-    // Convert the newly selected files into an array
-    const newFiles = Array.from(this.files);
     
-    // 1. Check if adding these exceeds the 4 file limit
-    if (selectedFilesArray.length + newFiles.length > 4) {
-      alert("You can only upload a maximum of 4 images in total.");
-      this.value = ""; // Clear the input box so it doesn't hold onto rejected files
-      return;
-    }
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const { latitude, longitude } = pos.coords;
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+        const data = await res.json();
+        const city = data.address.city || data.address.suburb || data.address.town || "";
+        locInput.value = city ? `${city}, ${data.address.state || ""}` : `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+      } catch (e) { locInput.value = `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`; }
+      isFetchingLocation = false;
+      locBtn.innerHTML = originalIcon;
+    }, (err) => {
+      isFetchingLocation = false;
+      locBtn.innerHTML = originalIcon;
+      alert("Location access denied");
+    });
+  };
 
-    // 2. Size check
-    for (let i = 0; i < newFiles.length; i++) {
-      if (newFiles[i].size > MAX_FILE_SIZE) {
-        alert(`The file "${newFiles[i].name}" is too large. Each image must be under 2MB.`);
-        this.value = ""; 
-        return;
-      }
-    }
-
-    // 3. If all valid, add them to our background array
-    selectedFilesArray = selectedFilesArray.concat(newFiles);
-    
-    // Reset the input box so the user can click it again to add MORE files if they want
-    this.value = ""; 
-
-    // Render the previews using our array
+  /* ================= IMAGE LOGIC ================= */
+  function handleFileSelect(e) {
+    const files = Array.from(e.target.files);
+    if (selectedFilesArray.length + files.length > 4) return alert("Max 4 images allowed");
+    selectedFilesArray = selectedFilesArray.concat(files);
     renderPreviews();
-  });
+    e.target.value = ""; 
+  }
 
-  // ✨ THE FUNCTION THAT DRAWS AND DELETES PREVIEWS
   function renderPreviews() {
-    previewContainer.innerHTML = ""; // Clear existing
-
-    // Update the text next to the button
-    if (selectedFilesArray.length > 0) {
-      if (selectedFilesArray.length === 1) {
-        fileNameDisplay.textContent = selectedFilesArray[0].name;
-      } else {
-        fileNameDisplay.textContent = `${selectedFilesArray.length} files selected`;
-      }
-      fileNameDisplay.style.color = "var(--text-main)"; 
-    } else {
-      fileNameDisplay.textContent = "No files chosen";
-      fileNameDisplay.style.color = "var(--text-muted)";
-    }
-
-    // Draw the images and the delete buttons
-    selectedFilesArray.forEach((file, index) => {
-      const wrapper = document.createElement("div");
-      wrapper.className = "preview-wrapper";
-
-      const imgUrl = URL.createObjectURL(file);
-      const imgElement = document.createElement("img");
-      imgElement.src = imgUrl;
-      imgElement.className = "preview-img";
-
-      const removeBtn = document.createElement("button");
-      removeBtn.className = "remove-btn";
-      removeBtn.innerHTML = "&minus;"; // A clean minus sign
-      
-      // When the minus button is clicked...
-      removeBtn.onclick = () => {
-        selectedFilesArray.splice(index, 1); // Remove this specific file from the array
-        renderPreviews(); // Redraw the UI!
-      };
-
-      wrapper.appendChild(imgElement);
-      wrapper.appendChild(removeBtn);
-      previewContainer.appendChild(wrapper);
+    const container = document.getElementById('previewContainer');
+    container.innerHTML = "";
+    selectedFilesArray.forEach((file, i) => {
+        const url = URL.createObjectURL(file);
+        const wrapper = document.createElement("div");
+        wrapper.className = "preview-wrapper";
+        wrapper.innerHTML = `<img src="${url}" class="preview-img"><button class="remove-btn" onclick="removeImg(${i})">✕</button>`;
+        container.appendChild(wrapper);
     });
   }
 
-  /* ================= POST ITEM & MULTIPLE UPLOADS ================= */
-  const btn = document.getElementById("postBtn");
-  const msg = document.getElementById("msg");
+  window.removeImg = (i) => {
+    selectedFilesArray.splice(i, 1);
+    renderPreviews();
+  };
+
+  /* ================= SUBMIT ================= */
+  const btn = document.getElementById("submitBtn");
+  const msg = document.getElementById("statusMsg");
 
   btn.onclick = async () => {
-    if (!currentUser) {
-      msg.innerText = "Not logged in";
-      msg.style.color = "#dc2626";
-      return;
-    }
-
     const title = document.getElementById("title").value.trim();
-    const category = document.getElementById("category").value;
+    const cat = document.getElementById("category").value;
     const price = document.getElementById("price").value;
     const contact = document.getElementById("contact").value.trim();
-    const locationStr = document.getElementById("location").value.trim();
-    const description = document.getElementById("description").value.trim();
-    
-    // ✨ WE NOW USE OUR BACKGROUND ARRAY INSTEAD OF THE FILE INPUT ✨
-    const files = selectedFilesArray;
+    const loc = document.getElementById("location").value.trim();
 
-    if (!title || !category || !price || !contact || !locationStr) {
-      msg.innerText = "Please fill all required fields";
-      msg.style.color = "#dc2626";
-      return;
-    }
+    if (!title || !cat || !price || !contact || !loc) return alert("Please fill all required fields");
 
     btn.disabled = true;
-    msg.innerText = "";
-    
-    let finalImageUrls = [];
+    btn.innerText = "UPLOADING...";
 
-    if (files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        btn.innerText = `Uploading Image ${i + 1} of ${files.length}...`;
-        
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-        const filePath = `${currentUser.id}/${fileName}`; 
-
-        const { error: uploadError } = await supabaseClient.storage
-          .from('item-images')
-          .upload(filePath, file);
-
-        if (uploadError) {
-          msg.innerText = `Image ${i + 1} upload failed: ` + uploadError.message;
-          msg.style.color = "#dc2626";
-          btn.disabled = false;
-          btn.innerText = "Post Item";
-          return;
-        }
-
-        const { data: publicUrlData } = supabaseClient.storage
-          .from('item-images')
-          .getPublicUrl(filePath);
-          
-        finalImageUrls.push(publicUrlData.publicUrl);
+    const urls = [];
+    for (let f of selectedFilesArray) {
+      const path = `${currentUser.id}/${Date.now()}-${f.name}`;
+      const { data } = await supabaseClient.storage.from('item-images').upload(path, f);
+      if (data) {
+        const { data: pUrl } = supabaseClient.storage.from('item-images').getPublicUrl(path);
+        urls.push(pUrl.publicUrl);
       }
     }
 
-    btn.innerText = "Saving Item...";
+    const { error } = await supabaseClient.from("items").insert({
+      title, category: cat, price, contact_number: contact, 
+      location: loc, image_urls: urls, user_id: currentUser.id,
+      description: document.getElementById("description").value.trim()
+    });
 
-    const { error: dbError } = await supabaseClient
-      .from("items")
-      .insert({
-        title,
-        category,
-        price,
-        description,
-        contact_number: contact,  
-        location: locationStr,    
-        image_urls: finalImageUrls, 
-        user_id: currentUser.id
-      });
-
-    if (dbError) {
-      msg.innerText = dbError.message;
-      msg.style.color = "#dc2626";
+    if (error) {
+      alert(error.message);
       btn.disabled = false;
-      btn.innerText = "Post Item";
-      return;
+      btn.innerText = "PUBLISH LISTING";
+    } else {
+      msg.style.color = "#16a34a";
+      msg.innerText = "LISTING PUBLISHED! REDIRECTING...";
+      setTimeout(() => location.href = "index.html", 1500);
     }
-
-    msg.innerText = "Item posted successfully! 🎉";
-    msg.style.color = "#16a34a";
-    btn.innerText = "Done";
-
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 1500);
   };
 </script>
-
 </body>
 </html>
