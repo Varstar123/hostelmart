@@ -5,6 +5,9 @@
   <title>Hostel Mart | Premium Campus Marketplace</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+  <link rel="icon" type="image/png" href="hm.png">
+  <link rel="apple-touch-icon" href="hm.png">
+
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
@@ -61,13 +64,12 @@
     .profile-btn { 
       border: 1.5px solid var(--card-border); background: var(--profile-bg); border-radius: 50%; width: 42px; height: 42px; 
       display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; 
-      overflow: hidden; /* CRITICAL FIX: Keep image inside circle */
-      padding: 0;
+      overflow: hidden; padding: 0;
     }
     .profile-btn:hover { border-color: var(--btn-border); transform: scale(1.05); }
-    .profile-btn img { width: 100%; height: 100%; object-fit: cover; } /* CRITICAL FIX */
+    .profile-btn img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* --- UPGRADED SIDEBAR --- */
+    /* --- SIDEBAR --- */
     .sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 999; opacity: 0; visibility: hidden; transition: 0.3s; }
     .sidebar-overlay.active { opacity: 1; visibility: visible; }
     .sidebar { 
@@ -76,32 +78,18 @@
     }
     .sidebar.active { left: 0; }
     
-    .sidebar-header { 
-      padding: 25px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center;
-      font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 18px; color: var(--btn-border); 
-    }
-    
+    .sidebar-header { padding: 25px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 18px; color: var(--btn-border); }
     .sidebar-profile { padding: 35px 20px; text-align: center; background: linear-gradient(to bottom, var(--profile-bg), transparent); }
-    .avatar-wrapper { 
-      width: 85px; height: 85px; margin: 0 auto; border-radius: 50%; background: var(--bg-main); 
-      display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--card-border);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.05); position: relative; 
-      overflow: hidden; /* CRITICAL FIX: Keep image inside circle */
-    }
-    .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; } /* CRITICAL FIX */
+    .avatar-wrapper { width: 85px; height: 85px; margin: 0 auto; border-radius: 50%; background: var(--bg-main); display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--card-border); box-shadow: 0 10px 20px rgba(0,0,0,0.05); position: relative; overflow: hidden; }
+    .avatar-wrapper img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
     
     .sidebar-menu { list-style: none; padding: 10px 15px; margin: 0; flex-grow: 1; }
     .sidebar-menu li { margin-bottom: 8px; }
-    .sidebar-menu button, .sidebar-menu a { 
-      width: 100%; text-align: left; padding: 12px 16px; border-radius: 12px; background: none; border: none; 
-      color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 14px; text-decoration: none; 
-      font-family: 'Outfit', sans-serif; font-weight: 500; font-size: 14px; transition: 0.2s ease;
-    }
+    .sidebar-menu button, .sidebar-menu a { width: 100%; text-align: left; padding: 12px 16px; border-radius: 12px; background: none; border: none; color: var(--text-main); cursor: pointer; display: flex; align-items: center; gap: 14px; text-decoration: none; font-family: 'Outfit', sans-serif; font-weight: 500; font-size: 14px; transition: 0.2s ease; }
     .sidebar-menu button:hover, .sidebar-menu a:hover { background: var(--sidebar-hover); color: var(--accent); }
 
     .menu-icon { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; opacity: 0.8; }
 
-    /* --- THEME TOGGLE & LOGOUT --- */
     .sidebar-footer { padding: 20px; border-top: 1px solid var(--card-border); }
     .theme-toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 5px; margin-bottom: 10px; }
     .switch { position: relative; width: 44px; height: 24px; }
@@ -111,12 +99,10 @@
     input:checked + .slider { background: var(--btn-border); }
     input:checked + .slider:before { transform: translateX(20px); }
 
-    /* Hero Section Visuals */
+    /* Hero Section */
     .hero { height: 65vh; min-height: 500px; display: flex; align-items: center; justify-content: center; text-align: center; background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.75)), url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=2070'); background-size: cover; background-position: center; color: white; padding: 0 20px; }
     .hero h1 { font-size: clamp(38px, 7vw, 64px); margin-bottom: 20px; line-height: 1; }
     .hero p { font-size: 18px; max-width: 600px; margin: 0 auto 40px; color: #cbd5e1; font-weight: 300; line-height: 1.6; }
-    .hero .btn { border-color: #ffffff; color: #ffffff; }
-    .hero .btn:hover { background: #ffffff; color: #0f172a; }
 
     /* Categories & Grid */
     .categories-section { padding: 80px 5% 40px; max-width: 1200px; margin: auto; text-align: center; }
@@ -126,25 +112,42 @@
     .search-container { max-width: 600px; margin: 0 auto; position: relative; }
     .search-container input { width: 100%; padding: 16px 20px 16px 54px; border-radius: 14px; border: 1.5px solid var(--card-border); background: var(--card-bg); color: var(--text-main); font-family: inherit; font-size: 15px; transition: 0.3s; box-sizing: border-box; }
     .search-container input:focus { outline: none; border-color: var(--btn-border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
-    .search-icon-wrapper { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 
     .products-section { padding: 40px 5% 100px; max-width: 1200px; margin: auto; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 35px; }
-    .card { background: var(--card-bg); border-radius: 24px; overflow: hidden; border: 1px solid var(--card-border); transition: all 0.4s ease; display: flex; flex-direction: column; }
-    .card:hover { transform: translateY(-8px); box-shadow: 0 30px 60px -12px rgba(0,0,0,0.15); border-color: var(--btn-border); }
-    .img-container { position: relative; height: 240px; overflow: hidden; }
-    .card img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
-    .card:hover img { transform: scale(1.08); }
-    .location-badge { position: absolute; top: 15px; right: 15px; background: rgba(255, 255, 255, 0.95); padding: 6px 14px; border-radius: 50px; font-size: 11px; font-weight: 700; color: #0f172a; }
-    .card-body { padding: 25px; flex: 1; display: flex; flex-direction: column; }
-    .category-tag { font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
-    .price { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; color: #10b981; margin-bottom: 20px; }
+    
+    /* Grid & Unified Card */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; }
+
+    .card { 
+      background: var(--card-bg); border-radius: 20px; overflow: hidden; border: 1px solid var(--card-border); 
+      transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease; 
+      display: flex; flex-direction: column; position: relative;
+    }
+    .card:hover { transform: translateY(-10px); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.12); border-color: var(--btn-border); }
+    
+    .img-container { position: relative; height: 180px; overflow: hidden; background: #f1f5f9; }
+    .card img { width: 100%; height: 100%; object-fit: cover; } 
+
+    /* SLICK LOCATION BADGE */
+    .location-badge { 
+      position: absolute; top: 12px; right: 12px; background: rgba(255, 255, 255, 0.95); 
+      padding: 4px 12px; border-radius: 50px; font-size: 10px; font-weight: 700; color: #0f172a;
+      z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 5px;
+      border: 1px solid var(--card-border);
+    }
+    .badge-icon { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+
+    .card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; }
+    .category-tag { font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+    .price { font-family: 'Outfit', sans-serif; font-size: 19px; font-weight: 700; color: #10b981; margin-bottom: 15px; }
   </style>
 </head>
 <body>
 
 <script>
-  if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+  if (localStorage.getItem('theme') === 'dark') {
+    document.body.classList.add('dark-mode');
+  }
 </script>
 
 <svg style="display:none;">
@@ -153,6 +156,7 @@
   <symbol id="icon-plus" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></symbol>
   <symbol id="icon-home" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></symbol>
   <symbol id="icon-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></symbol>
+  <symbol id="icon-map-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></symbol>
 </svg>
 
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
@@ -161,7 +165,6 @@
     <span class="logo-font">Menu</span>
     <button onclick="toggleSidebar()" style="background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:20px;">✕</button>
   </div>
-  
   <div class="sidebar-profile">
     <div class="avatar-wrapper" onclick="document.getElementById('avatarUpload').click()" style="cursor:pointer">
       <img id="sidebarAvatarImg" src="" style="display: none;">
@@ -171,13 +174,11 @@
     <h3 id="sideName" style="margin:15px 0 0; font-family:'Outfit', sans-serif; font-size:18px;">Student User</h3>
     <p id="sideEmail" style="font-size:12px; color:var(--text-muted); font-weight:500;">email@college.edu</p>
   </div>
-
   <ul class="sidebar-menu">
     <li><button onclick="showMyItems()"><svg class="menu-icon"><use href="#icon-box"></use></svg> Your Listings</button></li>
     <li><a href="sell.html"><svg class="menu-icon"><use href="#icon-plus"></use></svg> Sell New Item</a></li>
     <li><a href="hostel.html"><svg class="menu-icon"><use href="#icon-home"></use></svg> Hostel Finder</a></li>
   </ul>
-
   <div class="sidebar-footer">
     <div class="theme-toggle-row">
       <span style="font-size:11px; font-weight:800; font-family:'Outfit', sans-serif; letter-spacing:1px; opacity:0.7;">DARK MODE</span>
@@ -209,7 +210,7 @@
 <section class="hero">
   <div>
     <h1 class="logo-font">CAMPUS<br>COMMERCE.</h1>
-    <p>The premium student marketplace. Discover curated furniture, electronics, and local rooms within your hostel community.</p>
+    <p>The premium student marketplace. Discover furniture, electronics, and rooms within your community.</p>
     <div style="display:flex; gap:15px; justify-content:center;">
       <a href="#products" class="btn" onclick="setCategory('All')">BROWSE MARKET</a>
       <a href="hostel.html" class="btn">FIND A ROOM</a>
@@ -225,11 +226,7 @@
     <button class="cat-btn" onclick="setCategory('Books', this)">BOOKS</button>
     <button class="cat-btn" onclick="setCategory('Other', this)">OTHER</button>
   </div>
-
   <div class="search-container">
-    <div class="search-icon-wrapper">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-    </div>
     <input type="text" id="mainSearch" placeholder="Search items, hostels, or locations..." oninput="applyFilters()">
   </div>
 </section>
@@ -254,7 +251,10 @@
     if (!data.session) { window.location.href = "login.html"; return; }
     currentUser = data.session.user;
 
-    if (localStorage.getItem('theme') === 'dark') document.getElementById('themeSwitch').checked = true;
+    if (localStorage.getItem('theme') === 'dark') {
+        document.getElementById('themeSwitch').checked = true;
+        document.body.classList.add('dark-mode');
+    }
 
     document.getElementById("sideEmail").innerText = currentUser.email;
     document.getElementById("sideName").innerText = currentUser.user_metadata?.username || "Student User";
@@ -268,7 +268,6 @@
       document.getElementById('sidebarAvatarFallback').style.display = 'none';
       document.getElementById('headerAvatarFallback').style.display = 'none';
     }
-
     loadAllData();
   }
 
@@ -319,12 +318,15 @@
       const img = item.image_urls?.[0] || 'https://via.placeholder.com/400x300?text=No+Image';
       card.innerHTML = `
         <div class="img-container">
-          <div class="location-badge">📍 ${item.location || 'Campus'}</div>
+          <div class="location-badge">
+            <svg class="badge-icon"><use href="#icon-map-pin"></use></svg>
+            ${item.location || 'Campus'}
+          </div>
           <img src="${img}" alt="${item.title}">
         </div>
         <div class="card-body">
           <span class="category-tag">${item.category}</span>
-          <h4 class="logo-font" style="margin:0 0 12px; font-size:18px;">${item.title}</h4>
+          <h4 class="logo-font" style="margin:0 0 10px; font-size:16px;">${item.title}</h4>
           <div class="price">₹${item.price}</div>
           <button class="btn btn-sm" onclick="goToDetails('${item.id}', ${!!item.isHostel})">
             ${item.user_id === currentUser.id ? 'EDIT LISTING' : 'VIEW DETAILS'}

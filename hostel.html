@@ -59,19 +59,31 @@
     .search-container input:focus { border-color: var(--btn-border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
     .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
     
-    /* --- GRID & REDUCED CARDS --- */
+    /* --- GRID & CARDS --- */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
     .hostel-card { 
       background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid var(--divider); 
       transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease; 
       display: flex; flex-direction: column; 
+      position: relative; /* Necessary for the floating badge */
     }
-    /* Unified Hover: The whole card lifts */
     .hostel-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.12); border-color: var(--btn-border); }
     
-    .card-img { width: 100%; height: 180px; object-fit: cover; background: var(--divider); cursor: pointer; }
-    /* Removed image-only scale on hover */
+    .img-container { position: relative; width: 100%; height: 180px; overflow: hidden; }
+    .card-img { width: 100%; height: 100%; object-fit: cover; background: var(--divider); cursor: pointer; }
     
+    /* --- LOCATION BADGE (TOP RIGHT) --- */
+    .location-badge { 
+      position: absolute; top: 12px; right: 12px; 
+      background: rgba(255, 255, 255, 0.95); 
+      padding: 4px 12px; border-radius: 50px; 
+      font-size: 10px; font-weight: 700; color: #0f172a;
+      z-index: 10; display: flex; align-items: center; gap: 5px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border: 1px solid var(--divider);
+    }
+    .badge-icon { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.5; fill: none; }
+
     .badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border-radius: 50px; font-size: 9px; font-weight: 800; text-transform: uppercase; margin-right: 4px; font-family: 'Outfit'; letter-spacing: 0.5px; }
     .badge-date { background: #fee2e2; color: #ef4444; }
     .badge-food { background: #dcfce7; color: #16a34a; }
@@ -265,7 +277,13 @@
       const div = document.createElement('div');
       div.className = 'hostel-card';
       div.innerHTML = `
-        <img src="${h.image_urls?.[0] || 'https://via.placeholder.com/400x230'}" class="card-img" onclick="viewRoom('${h.id}')">
+        <div class="img-container">
+          <div class="location-badge">
+            <svg class="badge-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            ${h.location}
+          </div>
+          <img src="${h.image_urls?.[0] || 'https://via.placeholder.com/400x230'}" class="card-img" onclick="viewRoom('${h.id}')">
+        </div>
         <div class="card-content">
           <div style="margin-bottom:8px;">
             <span class="badge badge-date">
@@ -275,9 +293,6 @@
             <span class="badge badge-food">${h.food_status}</span>
           </div>
           <h2 class="logo-font" onclick="viewRoom('${h.id}')">${h.hostel_name}</h2>
-          <div style="color:var(--text-muted); font-size:12px; margin-bottom:8px; font-weight:500;">
-             ${h.location}
-          </div>
           <div style="margin-bottom:10px; display:flex; flex-wrap:wrap; gap:4px;">${tags}</div>
           <div class="price">₹${h.rent}<span style="font-size:11px; opacity:0.6; font-weight:500;"> / month</span></div>
           <button class="btn btn-sm" style="width:100%; margin-top:5px;" onclick="viewRoom('${h.id}')">${buttonLabel}</button>
