@@ -92,12 +92,12 @@
       font-weight: 700; 
       color: #0f172a;
       z-index: 10; 
-      display: inline-flex; /* Changed from flex to inline-flex to prevent stretching */
+      display: inline-flex;
       align-items: center; 
       gap: 5px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       border: 1px solid var(--divider);
-      white-space: nowrap; /* Keep text on one line */
+      white-space: nowrap;
     }
     .badge-icon { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.5; fill: none; }
 
@@ -254,6 +254,7 @@
     const name = document.getElementById('instName').value.trim();
     const dist = document.getElementById('instDist').value.trim();
     if (!name || !dist) return alert("Fill name and distance");
+    
     nearbyInstitutes.push({ name, dist });
     document.getElementById('instName').value = "";
     document.getElementById('instDist').value = "";
@@ -301,10 +302,7 @@
       div.className = 'hostel-card';
       div.innerHTML = `
         <div class="img-container">
-          <div class="location-badge">
-            <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            ${h.location}
-          </div>
+          <div class="location-badge"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>${h.location}</div>
           <img src="${h.image_urls?.[0] || 'https://via.placeholder.com/400x230'}" class="card-img" onclick="viewRoom('${h.id}')">
         </div>
         <div class="card-content">
@@ -312,7 +310,7 @@
           <h2 class="logo-font" onclick="viewRoom('${h.id}')">${h.hostel_name}</h2>
           <div style="margin-bottom:10px; display:flex; flex-wrap:wrap; gap:4px;">${tags}</div>
           <div class="price">₹${h.rent}<span style="font-size:11px; opacity:0.6; font-weight:500;"> / month</span></div>
-          <button class="btn btn-sm" style="width:100%; margin-top:5px;" onclick="viewRoom('${h.id}')">${isOwner ? 'EDIT' : 'DETAILS'}</button>
+          <button class="btn btn-sm" style="width:100%; margin-top:5px;" onclick="viewRoom('${h.id}')">${isOwner ? 'EDIT' : 'VIEW DETAILS'}</button>
         </div>`;
       grid.appendChild(div);
     });
