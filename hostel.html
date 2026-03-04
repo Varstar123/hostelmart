@@ -17,7 +17,7 @@
       --btn-hover-text: #ffffff; --profile-bg: #f1f5f9;
       --skeleton-bg: #f1f5f9;
       --skeleton-shimmer: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
-      --price-color: #0f172a; /* Default for light mode */
+      --price-color: #0f172a;
     }
 
     body.dark-mode {
@@ -26,7 +26,7 @@
       --btn-hover-bg: #ffffff; --btn-hover-text: #0f172a; --profile-bg: #334155;
       --skeleton-bg: #334155;
       --skeleton-shimmer: linear-gradient(90deg, #334155 0%, #475569 50%, #334155 100%);
-      --price-color: #ffffff; /* White for dark mode */
+      --price-color: #ffffff;
     }
 
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: background 0.3s ease; }
@@ -97,8 +97,6 @@
     
     .card-content { padding: 20px; flex: 1; }
     .card-content h2 { margin: 0 0 6px 0; font-family: 'Outfit'; font-size: 18px; cursor: pointer; line-height: 1.2; }
-    
-    /* UPDATED PRICE COLOR */
     .price { font-family: 'Outfit'; font-size: 20px; font-weight: 700; color: var(--price-color); margin: 10px 0; }
     
     .nearby-tag { 
@@ -119,11 +117,9 @@
     }
     .skeleton-img { height: 180px; width: 100%; border-radius: 0; }
     .skeleton-text { height: 12px; border-radius: 4px; background: var(--skeleton-bg); margin-bottom: 10px; }
-    .skeleton-title { width: 70%; height: 18px; margin-top: 10px; }
-    .skeleton-badge { width: 30%; height: 15px; display: inline-block; margin-right: 5px; }
 
     /* --- MODAL --- */
-    .modal-overlay { position: fixed; inset: 0; background: var(--modal-bg); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px); }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px); }
     .modal-overlay.active { display: flex; }
     .modal { background: var(--card); width: 95%; max-width: 600px; padding: 40px; border-radius: 30px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid var(--divider); }
     .close-modal { position: absolute; top: 25px; right: 25px; cursor: pointer; font-size: 22px; color: var(--text-muted); transition: 0.2s; }
@@ -131,6 +127,9 @@
     label { display: block; font-size: 11px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
     input, select, textarea { width: 100%; padding: 14px 18px; border: 1.5px solid var(--divider); border-radius: 12px; background: var(--bg); color: var(--text); box-sizing: border-box; font-family: inherit; transition: 0.3s; outline: none; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+    /* Modal Institution Badge */
+    .nearby-item-badge { display: flex; justify-content: space-between; align-items: center; background: var(--profile-bg); padding: 10px 15px; border-radius: 10px; margin-bottom: 8px; font-size: 13px; font-weight: 600; border: 1px solid var(--divider); }
 
     .preview-container { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
     .preview-wrapper { width: 70px; height: 70px; border-radius: 12px; overflow: hidden; border: 1px solid var(--divider); }
@@ -160,7 +159,7 @@
   <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
     <div>
       <h1 class="logo-font" style="margin:0; font-size: 32px; line-height: 1;">Room Finder</h1>
-      <p style="color: var(--text-muted); margin: 10px 0 0 0; font-weight: 400; font-size: 15px;">Search stays near your college or institution.</p>
+      <p style="color: var(--text-muted); margin: 10px 0 0 0; font-weight: 400; font-size: 15px;">Search stays near your college.</p>
     </div>
     <button class="btn" onclick="openModal()">+ LIST YOUR ROOM</button>
   </div>
@@ -177,9 +176,8 @@
   </div>
   
   <div class="grid" id="hostelGrid">
-    <div class="hostel-card"><div class="img-container skeleton"></div><div class="card-content"><div class="skeleton-badge"></div><div class="skeleton-badge"></div><div class="skeleton-text skeleton-title"></div><div class="skeleton-text" style="width:50%"></div></div></div>
-    <div class="hostel-card"><div class="img-container skeleton"></div><div class="card-content"><div class="skeleton-badge"></div><div class="skeleton-badge"></div><div class="skeleton-text skeleton-title"></div><div class="skeleton-text" style="width:50%"></div></div></div>
-    <div class="hostel-card"><div class="img-container skeleton"></div><div class="card-content"><div class="skeleton-badge"></div><div class="skeleton-badge"></div><div class="skeleton-text skeleton-title"></div><div class="skeleton-text" style="width:50%"></div></div></div>
+    <div class="hostel-card"><div class="img-container skeleton"></div><div class="card-content"><div class="skeleton-text" style="width:70%"></div><div class="skeleton-text" style="width:40%"></div></div></div>
+    <div class="hostel-card"><div class="img-container skeleton"></div><div class="card-content"><div class="skeleton-text" style="width:70%"></div><div class="skeleton-text" style="width:40%"></div></div></div>
   </div>
 </div>
 
@@ -193,15 +191,17 @@
       <div class="form-group"><label>Vacating Date</label><input type="date" id="hDate"></div>
     </div>
     <div class="form-group"><label>Location</label><input id="hLoc" placeholder="Area, Landmark, or City"></div>
+
     <div class="form-group">
         <label>Nearest Institutions</label>
-        <div id="institutionsList" class="nearby-list" style="display:none;"></div>
-        <div class="nearby-input-row" style="display: flex; gap: 8px;">
-            <input type="text" id="instName" placeholder="College name" style="width: 60%;">
-            <input type="text" id="instDist" placeholder="KM" style="width: 20%;">
-            <button class="btn btn-sm" onclick="addInstitution()">ADD</button>
+        <div id="modalInstList" style="margin-bottom: 10px;"></div>
+        <div style="display: flex; gap: 8px;">
+            <input type="text" id="instName" placeholder="College name" style="flex: 2;">
+            <input type="number" id="instDist" placeholder="KM" style="flex: 1;">
+            <button type="button" class="btn btn-sm" onclick="addInstitution()">ADD</button>
         </div>
     </div>
+
     <div class="form-row">
       <div class="form-group"><label>Food</label><select id="hFood"><option value="Included">Included</option><option value="Not Included">Not Included</option><option value="Flexible">Flexible</option></select></div>
       <div class="form-group"><label>Rent (₹)</label><input type="number" id="hRent" placeholder="Monthly rent"></div>
@@ -210,7 +210,7 @@
     <div class="form-group">
         <label>Photos</label>
         <input type="file" id="hImages" multiple accept="image/*" style="display:none;" onchange="handleFileSelect(event)">
-        <button class="btn btn-secondary btn-sm" style="width: 100%; border-style: dashed;" onclick="document.getElementById('hImages').click()">SELECT IMAGES</button>
+        <button type="button" class="btn btn-secondary btn-sm" style="width: 100%; border-style: dashed;" onclick="document.getElementById('hImages').click()">SELECT IMAGES</button>
         <div id="previewContainer" class="preview-container"></div>
     </div>
     <button class="btn" style="width:100%; margin-top: 10px;" id="submitBtn" onclick="submitHostel()">PUBLISH LISTING</button>
@@ -235,50 +235,26 @@
     loadHostels();
   }
 
+  /* --- NEARBY INSTITUTIONS MODAL LOGIC --- */
   function addInstitution() {
     const name = document.getElementById('instName').value.trim();
     const dist = document.getElementById('instDist').value.trim();
-    if (!name || !dist) return;
+    if (!name || !dist) return alert("Fill name and distance");
+    
     nearbyInstitutes.push({ name, dist });
     document.getElementById('instName').value = "";
     document.getElementById('instDist').value = "";
-    renderInstitutionsUI();
+    renderModalInstitutions();
   }
 
-  function renderInstitutionsUI() {
-    const listDiv = document.getElementById('institutionsList');
-    listDiv.innerHTML = "";
-    listDiv.style.display = nearbyInstitutes.length ? "block" : "none";
-    nearbyInstitutes.forEach((item, i) => {
-        listDiv.innerHTML += `<div class="nearby-item" style="display:flex; justify-content:space-between; background:var(--profile-bg); padding:8px 12px; border-radius:8px; margin-bottom:5px; font-size:12px;"><span>🎓 ${item.name} (${item.dist}km)</span><span style="color:#ef4444; cursor:pointer;" onclick="nearbyInstitutes.splice(${i},1); renderInstitutionsUI();">✕</span></div>`;
-    });
-  }
-
-  function filterHostels() {
-    const query = document.getElementById('hostelSearch').value.toLowerCase();
-    const filtered = allHostels.filter(h => {
-      const nameMatch = h.hostel_name.toLowerCase().includes(query);
-      const locMatch = h.location.toLowerCase().includes(query);
-      const instMatch = h.nearby_institutions?.some(inst => inst.name.toLowerCase().includes(query));
-      return nameMatch || locMatch || instMatch;
-    });
-    renderHostels(filtered);
-  }
-
-  async function findNearMe() {
-    if (!navigator.geolocation) return;
-    const btn = document.getElementById('nearMeBtn');
-    btn.innerHTML = `⌛ LOCATING...`;
-    navigator.geolocation.getCurrentPosition(async (pos) => {
-      try {
-        const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
-        const data = await res.json();
-        const city = data.address.city || data.address.suburb || "";
-        document.getElementById('hostelSearch').value = city;
-        filterHostels();
-        btn.innerHTML = `<svg class="icon-svg" style="margin-right: 5px; width: 14px; height: 14px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> ${city.toUpperCase()}`;
-      } catch(e) { btn.innerText = "📍 NEAR ME"; }
-    });
+  function renderModalInstitutions() {
+    const container = document.getElementById('modalInstList');
+    container.innerHTML = nearbyInstitutes.map((inst, i) => `
+        <div class="nearby-item-badge">
+            <span>🎓 ${inst.name} (${inst.dist}km)</span>
+            <span style="color:#ef4444; cursor:pointer;" onclick="nearbyInstitutes.splice(${i},1); renderModalInstitutions();">✕</span>
+        </div>
+    `).join('');
   }
 
   async function loadHostels() {
@@ -287,61 +263,76 @@
     renderHostels(allHostels);
   }
 
-  function viewRoom(id) {
-    localStorage.setItem("item_id", id);
-    window.location.href = "room.html";
+  function filterHostels() {
+    const query = document.getElementById('hostelSearch').value.toLowerCase();
+    const filtered = allHostels.filter(h => 
+      h.hostel_name.toLowerCase().includes(query) || 
+      h.location.toLowerCase().includes(query) ||
+      h.nearby_institutions?.some(inst => inst.name.toLowerCase().includes(query))
+    );
+    renderHostels(filtered);
   }
 
   function renderHostels(list) {
     const grid = document.getElementById('hostelGrid');
-    grid.innerHTML = list.length ? "" : "<p style='grid-column:1/-1; text-align:center; padding:50px; opacity:0.5;'>No matching rooms found.</p>";
+    grid.innerHTML = list.length ? "" : "<p style='grid-column:1/-1; text-align:center; padding:50px; opacity:0.5;'>No rooms found.</p>";
     list.forEach(h => {
       const date = new Date(h.vacating_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      let tags = h.nearby_institutions ? h.nearby_institutions.slice(0, 2).map(i => `<span class="nearby-tag">🎓 ${i.name}</span>`).join('') : "";
+      
+      /* --- MODIFIED CARD RENDER LOGIC --- */
+      let tags = "";
+      if (h.nearby_institutions && Array.isArray(h.nearby_institutions)) {
+          tags = h.nearby_institutions.slice(0, 2).map(i => `<span class="nearby-tag">🎓 ${i.name}</span>`).join('');
+      }
+
       const isOwner = currentUser && h.user_id === currentUser.id;
-      const buttonLabel = isOwner ? 'EDIT LISTING' : 'VIEW DETAILS';
 
       const div = document.createElement('div');
       div.className = 'hostel-card';
       div.innerHTML = `
         <div class="img-container">
-          <div class="location-badge">
-            <svg class="badge-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-            ${h.location}
-          </div>
+          <div class="location-badge"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>${h.location}</div>
           <img src="${h.image_urls?.[0] || 'https://via.placeholder.com/400x230'}" class="card-img" onclick="viewRoom('${h.id}')">
         </div>
         <div class="card-content">
-          <div style="margin-bottom:8px;">
-            <span class="badge badge-date">
-              <svg class="icon-svg" style="width: 9px; height: 9px; margin-right: 3px;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-              From ${date}
-            </span>
-            <span class="badge badge-food">${h.food_status}</span>
-          </div>
+          <div style="margin-bottom:8px;"><span class="badge badge-date">From ${date}</span><span class="badge badge-food">${h.food_status}</span></div>
           <h2 class="logo-font" onclick="viewRoom('${h.id}')">${h.hostel_name}</h2>
           <div style="margin-bottom:10px; display:flex; flex-wrap:wrap; gap:4px;">${tags}</div>
           <div class="price">₹${h.rent}<span style="font-size:11px; opacity:0.6; font-weight:500;"> / month</span></div>
-          <button class="btn btn-sm" style="width:100%; margin-top:5px;" onclick="viewRoom('${h.id}')">${buttonLabel}</button>
-        </div>
-      `;
+          <button class="btn btn-sm" style="width:100%; margin-top:5px;" onclick="viewRoom('${h.id}')">${isOwner ? 'EDIT' : 'DETAILS'}</button>
+        </div>`;
       grid.appendChild(div);
     });
   }
 
-  function openModal() { if(!currentUser) return alert("Log in first"); document.getElementById('modalOverlay').classList.add('active'); }
-  function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
-  function handleFileSelect(e) { selectedFiles = Array.from(e.target.files); renderPreviews(); }
-  function renderPreviews() {
-    const container = document.getElementById('previewContainer'); container.innerHTML = "";
-    selectedFiles.forEach(f => {
-        container.innerHTML += `<div class="preview-wrapper"><img src="${URL.createObjectURL(f)}" class="preview-img"></div>`;
+  async function findNearMe() {
+    if (!navigator.geolocation) return;
+    const btn = document.getElementById('nearMeBtn'); btn.innerHTML = `⌛...`;
+    navigator.geolocation.getCurrentPosition(async (pos) => {
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${pos.coords.latitude}&lon=${pos.coords.longitude}`);
+      const data = await res.json();
+      const city = data.address.city || data.address.suburb || "";
+      document.getElementById('hostelSearch').value = city; filterHostels();
+      btn.innerHTML = `<svg class="icon-svg" style="margin-right:5px; width:14px; height:14px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> ${city.toUpperCase()}`;
     });
   }
 
+  function viewRoom(id) { localStorage.setItem("item_id", id); window.location.href = "room.html"; }
+  function openModal() { if(!currentUser) return alert("Log in first"); document.getElementById('modalOverlay').classList.add('active'); }
+  function closeModal() { 
+      document.getElementById('modalOverlay').classList.remove('active');
+      nearbyInstitutes = []; 
+      renderModalInstitutions();
+  }
+  function handleFileSelect(e) { selectedFiles = Array.from(e.target.files); renderPreviews(); }
+  function renderPreviews() {
+    const container = document.getElementById('previewContainer'); container.innerHTML = "";
+    selectedFiles.forEach(f => { container.innerHTML += `<div class="preview-wrapper"><img src="${URL.createObjectURL(f)}" class="preview-img"></div>`; });
+  }
+
+  /* --- FIXED SUBMIT LOGIC: INCLUDES nearby_institutions --- */
   async function submitHostel() {
-    const btn = document.getElementById('submitBtn');
-    btn.disabled = true; btn.innerText = "PUBLISHING...";
+    const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.innerText = "PUBLISHING...";
     const urls = [];
     for (let f of selectedFiles) {
       const path = `${currentUser.id}/${Date.now()}-${f.name}`;
@@ -349,11 +340,16 @@
       if(data) { const { data: pUrl } = supabaseClient.storage.from('item-images').getPublicUrl(path); urls.push(pUrl.publicUrl); }
     }
     await supabaseClient.from('hostels').insert([{
-      user_id: currentUser.id, hostel_name: document.getElementById('hName').value,
-      location: document.getElementById('hLoc').value, gender_type: document.getElementById('hType').value,
-      food_status: document.getElementById('hFood').value, rent: document.getElementById('hRent').value,
-      contact_number: document.getElementById('hContact').value, vacating_date: document.getElementById('hDate').value,
-      nearby_institutions: nearbyInstitutes, image_urls: urls
+      user_id: currentUser.id, 
+      hostel_name: document.getElementById('hName').value,
+      location: document.getElementById('hLoc').value, 
+      gender_type: document.getElementById('hType').value,
+      food_status: document.getElementById('hFood').value, 
+      rent: document.getElementById('hRent').value,
+      contact_number: document.getElementById('hContact').value, 
+      vacating_date: document.getElementById('hDate').value,
+      nearby_institutions: nearbyInstitutes, // Ensuring institutions are saved
+      image_urls: urls
     }]);
     location.reload();
   }

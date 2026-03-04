@@ -303,6 +303,7 @@
     document.getElementById("roomTitleDisplay").innerText = roomData.hostel_name;
     document.getElementById("roomRentDisplay").innerText = roomData.rent;
     document.getElementById("roomLocationDisplay").innerText = roomData.location;
+    // Map the correct field name from database
     document.getElementById("roomDescriptionDisplay").innerText = roomData.sharing_type || "No extra details provided.";
     document.getElementById("phoneNumber").innerText = roomData.contact_number;
     document.getElementById("vacatingBadge").innerText = "Available: " + new Date(roomData.vacating_date).toLocaleDateString();
@@ -312,11 +313,16 @@
     renderGallery();
   }
 
+  /* --- INSTITUTIONS RENDER FIX --- */
   function renderInstitutions() {
     const instList = document.getElementById("instituteList");
     instList.innerHTML = "";
-    if(roomData.nearby_institutions && Array.isArray(roomData.nearby_institutions) && roomData.nearby_institutions.length > 0) {
-      roomData.nearby_institutions.forEach((inst, i) => {
+    
+    // Crucial: check both roomData.nearby_institutions and nested array
+    const institutions = roomData.nearby_institutions || [];
+    
+    if(institutions.length > 0) {
+      institutions.forEach((inst, i) => {
         instList.innerHTML += `
             <div class="inst-item">
                 <span>🎓 ${inst.name}</span>
@@ -344,10 +350,16 @@
     const name = document.getElementById('newInstName').value.trim();
     const dist = document.getElementById('newInstDist').value.trim();
     if(!name || !dist) return alert("Fill both fields");
+    
     const submitBtn = document.getElementById('submitInstBtn');
     submitBtn.innerText = "⏳";
-    const newList = Array.isArray(roomData.nearby_institutions) ? [...roomData.nearby_institutions, { name, dist }] : [{ name, dist }];
+
+    // Ensure nearby_institutions is always an array before spreading
+    const currentList = Array.isArray(roomData.nearby_institutions) ? roomData.nearby_institutions : [];
+    const newList = [...currentList, { name, dist }];
+    
     const { error } = await supabaseClient.from("hostels").update({ nearby_institutions: newList }).eq("id", currentRoomId);
+    
     if(!error) { 
         roomData.nearby_institutions = newList; 
         renderInstitutions(); 
@@ -366,6 +378,7 @@
     else { alert("Failed to remove: " + error.message); }
   }
 
+  /* --- GALLERY & IMAGES --- */
   function renderGallery() {
     const urls = roomData.image_urls || [];
     const mainImg = document.getElementById("mainRoomImage");
@@ -432,6 +445,7 @@
     else { alert("Failed to delete photo: " + error.message); }
   }
 
+  /* --- EDITING --- */
   function startEdit(fieldId) {
     document.getElementById(fieldId + "Display").style.display = "none";
     document.getElementById(fieldId + "Edit").style.display = "block";

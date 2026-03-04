@@ -44,68 +44,23 @@
     }
 
     body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); transition: 0.3s; min-height: 100vh; }
-    
     .logo-font { font-family: 'Outfit', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
 
     header { background: var(--bg-header); padding: 14px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 0 var(--card-border); position: sticky; top: 0; z-index: 100; }
     header h2 { margin: 0; font-size: 20px; color: var(--btn-border); }
 
-    .btn { 
-      padding: 10px 22px; 
-      border-radius: 8px; 
-      border: 1.5px solid var(--btn-border); 
-      background: transparent; 
-      color: var(--btn-text); 
-      font-weight: 600; 
-      font-size: 13px; 
-      text-decoration: none; 
-      transition: all 0.3s ease; 
-      display: inline-block; 
-      cursor: pointer;
-      text-align: center;
-      font-family: 'Outfit', sans-serif;
-      letter-spacing: 0.5px;
-    }
+    .btn { padding: 10px 22px; border-radius: 8px; border: 1.5px solid var(--btn-border); background: transparent; color: var(--btn-text); font-weight: 600; font-size: 13px; text-decoration: none; transition: all 0.3s ease; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; text-align: center; font-family: 'Outfit', sans-serif; letter-spacing: 0.5px; }
     .btn:hover { background: var(--btn-hover-bg); color: var(--btn-hover-text); transform: translateY(-2px); }
     .btn-secondary { background: transparent; border-color: var(--card-border); color: var(--text-muted); }
     .btn-danger { border-color: #ef4444; color: #ef4444; margin-top: 50px; }
     .btn-danger:hover { background: #ef4444; color: white; }
 
     .product-container { max-width: 1200px; margin: 40px auto; padding: 0 5%; display: grid; grid-template-columns: 1.1fr 1fr; gap: 60px; }
-    
     .gallery-container { display: flex; flex-direction: column; gap: 16px; }
-    .main-image-wrapper { 
-      background: var(--card-bg); 
-      border-radius: 28px; 
-      border: 1px solid var(--card-border); 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      height: 500px; 
-      position: relative; 
-      overflow: hidden;
-    }
+    .main-image-wrapper { background: var(--card-bg); border-radius: 28px; border: 1px solid var(--card-border); display: flex; align-items: center; justify-content: center; height: 500px; position: relative; overflow: hidden; }
     .main-image-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 12px; }
 
-    .nav-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(12px);
-      color: var(--btn-text);
-      border: 1px solid var(--card-border);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: 0.3s;
-      z-index: 2;
-    }
+    .nav-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(12px); color: var(--btn-text); border: 1px solid var(--card-border); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: 0.3s; z-index: 2; }
     .main-image-wrapper:hover .nav-arrow { opacity: 1; }
     .arrow-left { left: 20px; }
     .arrow-right { right: 20px; }
@@ -118,7 +73,13 @@
     .icon-svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; flex-shrink: 0; stroke-linecap: round; stroke-linejoin: round; }
     
     .editable-group { position: relative; display: flex; align-items: center; gap: 12px; margin-bottom: 12px; width: 100%; }
-    .edit-icon { cursor: pointer; width: 16px; height: 16px; opacity: 0; transition: 0.2s; color: var(--text-muted); stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    
+    /* MODIFIED: Hidden by default and strictly shown only for owners */
+    .edit-icon { 
+      cursor: pointer; width: 16px; height: 16px; opacity: 0; transition: 0.2s; 
+      color: var(--text-muted); stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round;
+      display: none; 
+    }
     .editable-group:hover .edit-icon { opacity: 1; }
     
     .product-title { margin: 0; font-size: 42px; font-weight: 700; font-family: 'Outfit', sans-serif; line-height: 1.1; }
@@ -130,8 +91,10 @@
     .contact-number { font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-main); margin-top: 5px; display: flex; align-items: center; gap: 10px; }
     .category-badge { font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: var(--accent); background: rgba(37, 99, 235, 0.1); padding: 6px 12px; border-radius: 50px; text-transform: uppercase; width: fit-content; margin-bottom: 12px; }
 
-    /* --- SKELETON STYLES --- */
+    /* --- ANIMATIONS & SKELETON --- */
     @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    
     .skeleton { background: var(--skeleton-shimmer); background-size: 200% 100%; animation: shimmer 1.5s infinite linear; }
     .skeleton-box { border-radius: 28px; width: 100%; height: 500px; }
     .skeleton-text { height: 20px; background: var(--skeleton-bg); border-radius: 6px; margin-bottom: 15px; }
@@ -141,10 +104,7 @@
     .skeleton-desc { width: 100%; height: 120px; }
     .skeleton-thumb { width: 75px; height: 75px; border-radius: 14px; }
 
-    @media (max-width: 768px) { 
-        .product-container { grid-template-columns: 1fr; gap: 40px; } 
-        .main-image-wrapper, .skeleton-box { height: 400px; }
-    }
+    @media (max-width: 768px) { .product-container { grid-template-columns: 1fr; gap: 40px; } .main-image-wrapper, .skeleton-box { height: 400px; } }
   </style>
 </head>
 <body>
@@ -199,7 +159,7 @@
     
     <div class="editable-group">
       <h1 class="product-title" id="itemTitleDisplay">Title</h1>
-      <svg class="edit-icon" onclick="startEdit('itemTitle')" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      <svg class="edit-icon" onclick="startEdit('itemTitle')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
       <div id="itemTitleEdit" style="display:none; width:100%;">
         <input type="text" id="itemTitleInput" class="inline-edit-input">
         <div style="display: flex; gap: 8px; margin-top: 10px;">
@@ -211,7 +171,7 @@
 
     <div class="editable-group">
       <div class="price">₹<span id="itemPriceDisplay">0</span></div>
-      <svg class="edit-icon" onclick="startEdit('itemPrice')" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      <svg class="edit-icon" onclick="startEdit('itemPrice')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
       <div id="itemPriceEdit" style="display:none; width:100%;">
         <input type="number" id="itemPriceInput" class="inline-edit-input">
         <div style="display: flex; gap: 8px; margin-top: 10px;">
@@ -226,7 +186,7 @@
         <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
         <span id="itemLocationDisplay">Location</span>
       </div>
-      <svg class="edit-icon" onclick="startEdit('itemLocation')" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      <svg class="edit-icon" onclick="startEdit('itemLocation')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
       <div id="itemLocationEdit" style="display:none; width:100%;">
         <input type="text" id="itemLocationInput" class="inline-edit-input">
         <div style="display: flex; gap: 8px; margin-top: 10px;">
@@ -238,7 +198,7 @@
 
     <div class="editable-group">
       <div class="description" id="itemDescriptionDisplay">Description...</div>
-      <svg class="edit-icon" onclick="startEdit('itemDescription')" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+      <svg class="edit-icon" onclick="startEdit('itemDescription')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
       <div id="itemDescriptionEdit" style="display:none; width:100%;">
         <textarea id="itemDescriptionInput" class="inline-edit-input" style="height:150px;"></textarea>
         <div style="display: flex; gap: 8px; margin-top: 10px;">
@@ -296,6 +256,7 @@
     
     renderGallery(data.image_urls);
 
+    // LOGIC: Only show edit icons and delete button if current user is owner
     if (currentUser && currentUser.id === data.user_id) {
       document.querySelectorAll(".edit-icon").forEach(el => el.style.display = "inline-block");
       document.getElementById("deleteBtn").style.display = "block";
@@ -363,7 +324,7 @@
     if(!newValue) return alert("Value cannot be empty");
 
     saveBtn.disabled = true;
-    saveBtn.innerText = "⏳";
+    saveBtn.innerHTML = `⏳`;
 
     const { error } = await supabaseClient.from("items").update({ [dbField]: newValue }).eq("id", currentItemId);
     
@@ -381,9 +342,16 @@
   async function handleImageUpdate(e) {
     const files = Array.from(e.target.files);
     if (files.length > 4) return alert("Max 4 images allowed.");
+    if (files.length === 0) return;
+
     const changeBtn = document.getElementById("changePhotosBtn");
     changeBtn.disabled = true;
-    changeBtn.innerText = "UPLOADING...";
+    changeBtn.innerHTML = `
+      <svg class="icon-svg" style="animation: spin 1s linear infinite; margin-right: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/>
+      </svg>
+      SYNCING...
+    `;
 
     const uploadedUrls = [];
     for (const file of files) {
