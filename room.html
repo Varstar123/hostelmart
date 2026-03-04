@@ -93,11 +93,11 @@
 
     /* --- EDITABLE STYLES --- */
     .editable-group { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; margin-bottom: 5px; }
-    .edit-icon { cursor: pointer; width: 16px; height: 16px; opacity: 0; transition: 0.2s; color: var(--text-muted); display: none; }
+    .edit-icon { cursor: pointer; width: 16px; height: 16px; opacity: 0; transition: 0.2s; color: var(--text-muted); display: none; flex-shrink: 0; }
     .editable-group:hover .edit-icon { opacity: 0.7; }
     .edit-icon:hover { color: var(--accent); opacity: 1 !important; }
 
-    .inline-edit-input { font-family: 'Inter', sans-serif; font-size: inherit; background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 10px; padding: 10px 14px; width: 100%; outline: none; box-sizing: border-box; transition: 0.2s; }
+    .inline-edit-input { font-family: 'Inter', sans-serif; font-size: inherit; background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 10px; padding: 10px 14px; width: 100%; outline: none; box-sizing: border-box; transition: 0.2s; color: var(--text-main); }
 
     .product-title { margin: 0; font-size: 42px; font-weight: 700; font-family: 'Outfit', sans-serif; line-height: 1.1; }
     .price { font-size: 36px; font-weight: 800; color: #10b981; font-family: 'Outfit', sans-serif; }
@@ -189,7 +189,7 @@
   <div class="details-section">
     <div class="editable-group">
         <h1 class="product-title" id="roomTitleDisplay">Hostel Name</h1>
-        <svg class="edit-icon" onclick="startEdit('roomTitle')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        <svg class="edit-icon" id="editIconTitle" onclick="startEdit('roomTitle')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
         <div id="roomTitleEdit" style="display:none; width:100%;">
             <input type="text" id="roomTitleInput" class="inline-edit-input">
             <div style="display:flex; gap:8px; margin-top:10px;"><button class="btn btn-sm" onclick="saveEdit('hostel_name', 'roomTitle')">SAVE</button><button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomTitle')">CANCEL</button></div>
@@ -203,7 +203,7 @@
 
     <div class="editable-group">
         <div class="price">₹<span id="roomRentDisplay">0</span><span style="font-size: 14px; opacity: 0.6; font-weight: 500;">/month</span></div>
-        <svg class="edit-icon" onclick="startEdit('roomRent')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        <svg class="edit-icon" id="editIconRent" onclick="startEdit('roomRent')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
         <div id="roomRentEdit" style="display:none; width:100%;">
             <input type="number" id="roomRentInput" class="inline-edit-input">
             <div style="display:flex; gap:8px; margin-top:10px;"><button class="btn btn-sm" onclick="saveEdit('rent', 'roomRent')">SAVE</button><button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomRent')">CANCEL</button></div>
@@ -215,7 +215,7 @@
             <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             <span id="roomLocationDisplay">Location</span>
         </div>
-        <svg class="edit-icon" onclick="startEdit('roomLocation')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        <svg class="edit-icon" id="editIconLoc" onclick="startEdit('roomLocation')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
         <div id="roomLocationEdit" style="display:none; width:100%;">
             <input type="text" id="roomLocationInput" class="inline-edit-input">
             <div style="display:flex; gap:8px; margin-top:10px;"><button class="btn btn-sm" onclick="saveEdit('location', 'roomLocation')">SAVE</button><button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomLocation')">CANCEL</button></div>
@@ -244,10 +244,10 @@
 
     <div class="institute-box" id="instituteList"></div>
 
-    <h3 class="logo-font" style="font-size:13px; margin-top:10px; opacity:0.6;">ROOM DETAILS</h3>
+    <h3 class="logo-font" style="font-size:13px; margin-top:10px; opacity:0.6;">ROOM DESCRIPTION</h3>
     <div class="editable-group">
         <div class="description" id="roomDescriptionDisplay">Description...</div>
-        <svg class="edit-icon" onclick="startEdit('roomDescription')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        <svg class="edit-icon" id="editIconDesc" onclick="startEdit('roomDescription')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
         <div id="roomDescriptionEdit" style="display:none; width:100%;">
             <textarea id="roomDescriptionInput" class="inline-edit-input" style="height:120px;"></textarea>
             <div style="display:flex; gap:8px; margin-top:10px;"><button class="btn btn-sm" onclick="saveEdit('sharing_type', 'roomDescription')">SAVE</button><button class="btn btn-sm btn-secondary" onclick="cancelEdit('roomDescription')">CANCEL</button></div>
@@ -291,8 +291,9 @@
 
     updateUI();
 
+    // Owner validation
     if (currentUser && currentUser.id === data.user_id) {
-      document.querySelectorAll(".edit-icon").forEach(el => el.style.display = "inline");
+      document.querySelectorAll(".edit-icon").forEach(el => el.style.display = "inline-block");
       document.getElementById("deleteBtn").style.display = "block";
       document.getElementById("ownerImageAction").style.display = "block";
       document.getElementById("addInstBtn").style.display = "block";
@@ -303,7 +304,7 @@
     document.getElementById("roomTitleDisplay").innerText = roomData.hostel_name;
     document.getElementById("roomRentDisplay").innerText = roomData.rent;
     document.getElementById("roomLocationDisplay").innerText = roomData.location;
-    // Map the correct field name from database
+    // Map database 'sharing_type' to UI Description
     document.getElementById("roomDescriptionDisplay").innerText = roomData.sharing_type || "No extra details provided.";
     document.getElementById("phoneNumber").innerText = roomData.contact_number;
     document.getElementById("vacatingBadge").innerText = "Available: " + new Date(roomData.vacating_date).toLocaleDateString();
@@ -313,12 +314,9 @@
     renderGallery();
   }
 
-  /* --- INSTITUTIONS RENDER FIX --- */
   function renderInstitutions() {
     const instList = document.getElementById("instituteList");
     instList.innerHTML = "";
-    
-    // Crucial: check both roomData.nearby_institutions and nested array
     const institutions = roomData.nearby_institutions || [];
     
     if(institutions.length > 0) {
@@ -353,8 +351,6 @@
     
     const submitBtn = document.getElementById('submitInstBtn');
     submitBtn.innerText = "⏳";
-
-    // Ensure nearby_institutions is always an array before spreading
     const currentList = Array.isArray(roomData.nearby_institutions) ? roomData.nearby_institutions : [];
     const newList = [...currentList, { name, dist }];
     
@@ -378,7 +374,6 @@
     else { alert("Failed to remove: " + error.message); }
   }
 
-  /* --- GALLERY & IMAGES --- */
   function renderGallery() {
     const urls = roomData.image_urls || [];
     const mainImg = document.getElementById("mainRoomImage");
@@ -445,7 +440,6 @@
     else { alert("Failed to delete photo: " + error.message); }
   }
 
-  /* --- EDITING --- */
   function startEdit(fieldId) {
     document.getElementById(fieldId + "Display").style.display = "none";
     document.getElementById(fieldId + "Edit").style.display = "block";
@@ -461,9 +455,22 @@
   async function saveEdit(dbField, fieldId) {
     const newValue = document.getElementById(fieldId + "Input").value.trim();
     if(!newValue && dbField !== 'sharing_type') return alert("Field cannot be empty");
+    
+    // UI Feedback for Save
+    const saveBtn = document.querySelector(`#${fieldId}Edit .btn`);
+    const originalText = saveBtn.innerText;
+    saveBtn.innerText = "⏳";
+
     const { error } = await supabaseClient.from("hostels").update({ [dbField]: newValue }).eq("id", currentRoomId);
-    if (!error) { roomData[dbField] = newValue; updateUI(); cancelEdit(fieldId); }
-    else { alert("Save failed: " + error.message); }
+    
+    if (!error) { 
+        roomData[dbField] = newValue; 
+        updateUI(); 
+        cancelEdit(fieldId); 
+    } else {
+        alert("Save failed: " + error.message);
+    }
+    saveBtn.innerText = originalText;
   }
 
   async function deleteRoom() {
