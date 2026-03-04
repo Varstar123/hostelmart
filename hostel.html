@@ -15,12 +15,18 @@
       --accent: #2563eb; --divider: #e2e8f0; --modal-bg: rgba(15, 23, 42, 0.6);
       --btn-border: #0f172a; --btn-text: #0f172a; --btn-hover-bg: #0f172a;
       --btn-hover-text: #ffffff; --profile-bg: #f1f5f9;
+      --skeleton-bg: #f1f5f9;
+      --skeleton-shimmer: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+      --price-color: #0f172a; /* Default for light mode */
     }
 
     body.dark-mode {
       --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --text-muted: #94a3b8;
       --divider: #334155; --btn-border: #ffffff; --btn-text: #ffffff;
       --btn-hover-bg: #ffffff; --btn-hover-text: #0f172a; --profile-bg: #334155;
+      --skeleton-bg: #334155;
+      --skeleton-shimmer: linear-gradient(90deg, #334155 0%, #475569 50%, #334155 100%);
+      --price-color: #ffffff; /* White for dark mode */
     }
 
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: background 0.3s ease; }
@@ -67,14 +73,13 @@
       background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid var(--divider); 
       transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.4s ease; 
       display: flex; flex-direction: column; 
-      position: relative; /* Necessary for the floating badge */
+      position: relative;
     }
     .hostel-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px -10px rgba(0,0,0,0.12); border-color: var(--btn-border); }
     
     .img-container { position: relative; width: 100%; height: 180px; overflow: hidden; }
     .card-img { width: 100%; height: 100%; object-fit: cover; background: var(--divider); cursor: pointer; }
     
-    /* --- LOCATION BADGE (TOP RIGHT) --- */
     .location-badge { 
       position: absolute; top: 12px; right: 12px; 
       background: rgba(255, 255, 255, 0.95); 
@@ -92,12 +97,30 @@
     
     .card-content { padding: 20px; flex: 1; }
     .card-content h2 { margin: 0 0 6px 0; font-family: 'Outfit'; font-size: 18px; cursor: pointer; line-height: 1.2; }
-    .price { font-family: 'Outfit'; font-size: 20px; font-weight: 700; color: #10b981; margin: 10px 0; }
+    
+    /* UPDATED PRICE COLOR */
+    .price { font-family: 'Outfit'; font-size: 20px; font-weight: 700; color: var(--price-color); margin: 10px 0; }
     
     .nearby-tag { 
       display: inline-block; font-size: 10px; background: rgba(37, 99, 235, 0.08); color: var(--accent);
       padding: 3px 8px; border-radius: 6px; margin: 2px; font-weight: 600; font-family: 'Outfit';
     }
+
+    /* --- SKELETON ANIMATION --- */
+    @keyframes shimmer { 
+      0% { background-position: -200% 0; } 
+      100% { background-position: 200% 0; } 
+    }
+    
+    .skeleton { 
+      background: var(--skeleton-shimmer); 
+      background-size: 200% 100%; 
+      animation: shimmer 1.5s infinite linear; 
+    }
+    .skeleton-img { height: 180px; width: 100%; border-radius: 0; }
+    .skeleton-text { height: 12px; border-radius: 4px; background: var(--skeleton-bg); margin-bottom: 10px; }
+    .skeleton-title { width: 70%; height: 18px; margin-top: 10px; }
+    .skeleton-badge { width: 30%; height: 15px; display: inline-block; margin-right: 5px; }
 
     /* --- MODAL --- */
     .modal-overlay { position: fixed; inset: 0; background: var(--modal-bg); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px); }
@@ -154,7 +177,9 @@
   </div>
   
   <div class="grid" id="hostelGrid">
-    <div style="text-align: center; grid-column: 1/-1; padding: 100px; opacity: 0.5; font-family: 'Outfit'; letter-spacing: 1px;">SYNCING LISTINGS...</div>
+    <div class="hostel-card"><div class="img-container skeleton"></div><div class="card-content"><div class="skeleton-badge"></div><div class="skeleton-badge"></div><div class="skeleton-text skeleton-title"></div><div class="skeleton-text" style="width:50%"></div></div></div>
+    <div class="hostel-card"><div class="img-container skeleton"></div><div class="card-content"><div class="skeleton-badge"></div><div class="skeleton-badge"></div><div class="skeleton-text skeleton-title"></div><div class="skeleton-text" style="width:50%"></div></div></div>
+    <div class="hostel-card"><div class="img-container skeleton"></div><div class="card-content"><div class="skeleton-badge"></div><div class="skeleton-badge"></div><div class="skeleton-text skeleton-title"></div><div class="skeleton-text" style="width:50%"></div></div></div>
   </div>
 </div>
 
@@ -171,7 +196,7 @@
     <div class="form-group">
         <label>Nearest Institutions</label>
         <div id="institutionsList" class="nearby-list" style="display:none;"></div>
-        <div class="nearby-input-row">
+        <div class="nearby-input-row" style="display: flex; gap: 8px;">
             <input type="text" id="instName" placeholder="College name" style="width: 60%;">
             <input type="text" id="instDist" placeholder="KM" style="width: 20%;">
             <button class="btn btn-sm" onclick="addInstitution()">ADD</button>
@@ -225,7 +250,7 @@
     listDiv.innerHTML = "";
     listDiv.style.display = nearbyInstitutes.length ? "block" : "none";
     nearbyInstitutes.forEach((item, i) => {
-        listDiv.innerHTML += `<div class="nearby-item"><span>🎓 ${item.name} (${item.dist}km)</span><span style="color:#ef4444; cursor:pointer;" onclick="nearbyInstitutes.splice(${i},1); renderInstitutionsUI();">✕</span></div>`;
+        listDiv.innerHTML += `<div class="nearby-item" style="display:flex; justify-content:space-between; background:var(--profile-bg); padding:8px 12px; border-radius:8px; margin-bottom:5px; font-size:12px;"><span>🎓 ${item.name} (${item.dist}km)</span><span style="color:#ef4444; cursor:pointer;" onclick="nearbyInstitutes.splice(${i},1); renderInstitutionsUI();">✕</span></div>`;
     });
   }
 

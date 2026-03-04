@@ -7,6 +7,7 @@
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="global.js" defer></script>
+  <script src="footer.js" defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
 
   <style>
@@ -24,6 +25,8 @@
       --btn-hover-text: #ffffff;
       --accent: #2563eb;
       --danger: #ef4444;
+      --skeleton-bg: #f1f5f9;
+      --skeleton-shimmer: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
     }
 
     body.dark-mode {
@@ -37,9 +40,11 @@
       --btn-text: #ffffff;
       --btn-hover-bg: #ffffff;
       --btn-hover-text: #0f172a;
+      --skeleton-bg: #334155;
+      --skeleton-shimmer: linear-gradient(90deg, #334155 0%, #475569 50%, #334155 100%);
     }
 
-    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); transition: 0.3s; }
+    body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-main); transition: 0.3s; min-height: 100vh; }
     .logo-font { font-family: 'Outfit', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
 
     header { background: var(--bg-header); padding: 14px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 0 var(--card-border); position: sticky; top: 0; z-index: 100; }
@@ -85,7 +90,6 @@
         box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 10;
     }
     .thumb-wrapper:hover .delete-action-btn { display: flex; }
-    .action-icon-small { width: 12px; height: 12px; stroke: white; stroke-width: 4; fill: none; }
 
     /* --- EDITABLE STYLES --- */
     .editable-group { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; margin-bottom: 5px; }
@@ -94,7 +98,6 @@
     .edit-icon:hover { color: var(--accent); opacity: 1 !important; }
 
     .inline-edit-input { font-family: 'Inter', sans-serif; font-size: inherit; background: var(--card-bg); border: 1.5px solid var(--card-border); border-radius: 10px; padding: 10px 14px; width: 100%; outline: none; box-sizing: border-box; transition: 0.2s; }
-    .inline-edit-input:focus { border-color: var(--btn-border); }
 
     .product-title { margin: 0; font-size: 42px; font-weight: 700; font-family: 'Outfit', sans-serif; line-height: 1.1; }
     .price { font-size: 36px; font-weight: 800; color: #10b981; font-family: 'Outfit', sans-serif; }
@@ -114,12 +117,21 @@
     .inst-item:last-child { border: none; }
     
     .remove-inst-btn { color: var(--danger); cursor: pointer; padding: 5px; opacity: 0.6; transition: 0.2s; }
-    .remove-inst-btn:hover { opacity: 1; transform: scale(1.1); }
 
     .contact-section { padding-top: 30px; border-top: 1px solid var(--card-border); margin-top: 30px; }
     .contact-number { font-size: 24px; font-weight: 800; font-family: 'Outfit', sans-serif; color: var(--text-main); margin-top: 5px; }
 
-    @media (max-width: 768px) { .product-container { grid-template-columns: 1fr; gap: 40px; } .main-image-wrapper { height: 400px; } }
+    /* --- SKELETON STYLES --- */
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    .skeleton { background: var(--skeleton-shimmer); background-size: 200% 100%; animation: shimmer 1.5s infinite linear; }
+    .skeleton-box { border-radius: 28px; width: 100%; height: 500px; }
+    .skeleton-text { height: 20px; background: var(--skeleton-bg); border-radius: 6px; margin-bottom: 15px; }
+    .skeleton-badge { width: 100px; height: 25px; border-radius: 50px; }
+    .skeleton-title { width: 85%; height: 45px; }
+    .skeleton-price { width: 45%; height: 40px; }
+    .skeleton-thumb { width: 75px; height: 75px; border-radius: 14px; }
+
+    @media (max-width: 768px) { .product-container { grid-template-columns: 1fr; gap: 40px; } .main-image-wrapper, .skeleton-box { height: 400px; } }
   </style>
 </head>
 <body>
@@ -135,7 +147,28 @@
   </div>
 </header>
 
-<div id="loadingMsg" style="text-align:center; margin-top:100px; font-family:'Outfit'; opacity:0.5; letter-spacing: 2px;">SYNCING ROOM...</div>
+<div class="product-container" id="skeletonState">
+    <div class="gallery-container">
+        <div class="skeleton-box skeleton"></div>
+        <div class="thumbnail-row">
+            <div class="skeleton-thumb skeleton"></div>
+            <div class="skeleton-thumb skeleton"></div>
+            <div class="skeleton-thumb skeleton"></div>
+        </div>
+    </div>
+    <div class="details-section">
+        <div class="skeleton-text skeleton-title skeleton"></div>
+        <div class="badge-row">
+            <div class="skeleton-badge skeleton"></div>
+            <div class="skeleton-badge skeleton"></div>
+        </div>
+        <div class="skeleton-text skeleton-price skeleton"></div>
+        <div style="margin-top: 30px;">
+            <div class="skeleton-text skeleton" style="height: 100px; width: 100%;"></div>
+            <div class="skeleton-text skeleton" style="width: 70%; margin-top: 20px;"></div>
+        </div>
+    </div>
+</div>
 
 <div class="product-container" id="roomContent" style="display: none;">
   
@@ -227,7 +260,6 @@
         Owner Contact
       </div>
       <div class="contact-number" id="phoneNumber">--</div>
-      
       <button class="btn btn-danger btn-sm" style="width:100%; margin-top: 40px; display:none;" id="deleteBtn" onclick="deleteRoom()">REMOVE THIS LISTING</button>
     </div>
   </div>
@@ -248,12 +280,13 @@
 
     const { data, error } = await supabaseClient.from("hostels").select("*").eq("id", currentRoomId).single();
     if (error) {
-        console.error("Fetch Error:", error);
-        return document.getElementById("loadingMsg").innerText = "Room not found.";
+        document.getElementById("skeletonState").style.display = "none";
+        document.body.innerHTML += `<div style="text-align:center; margin-top:100px; font-family:'Outfit'; opacity:0.5;">Room not found.</div>`;
+        return;
     }
     
     roomData = data;
-    document.getElementById("loadingMsg").style.display = "none";
+    document.getElementById("skeletonState").style.display = "none";
     document.getElementById("roomContent").style.display = "grid";
 
     updateUI();
@@ -279,11 +312,9 @@
     renderGallery();
   }
 
-  /* --- INSTITUTIONS --- */
   function renderInstitutions() {
     const instList = document.getElementById("instituteList");
     instList.innerHTML = "";
-    // Ensure nearby_institutions exists before looping
     if(roomData.nearby_institutions && Array.isArray(roomData.nearby_institutions) && roomData.nearby_institutions.length > 0) {
       roomData.nearby_institutions.forEach((inst, i) => {
         instList.innerHTML += `
@@ -313,24 +344,17 @@
     const name = document.getElementById('newInstName').value.trim();
     const dist = document.getElementById('newInstDist').value.trim();
     if(!name || !dist) return alert("Fill both fields");
-
     const submitBtn = document.getElementById('submitInstBtn');
     submitBtn.innerText = "⏳";
-
     const newList = Array.isArray(roomData.nearby_institutions) ? [...roomData.nearby_institutions, { name, dist }] : [{ name, dist }];
-    
     const { error } = await supabaseClient.from("hostels").update({ nearby_institutions: newList }).eq("id", currentRoomId);
-
     if(!error) { 
         roomData.nearby_institutions = newList; 
         renderInstitutions(); 
         toggleInstForm();
         document.getElementById('newInstName').value = "";
         document.getElementById('newInstDist').value = "";
-    } else {
-        console.error("Update Error:", error);
-        alert("Failed to save: " + error.message);
-    }
+    } else { alert("Failed to save: " + error.message); }
     submitBtn.innerText = "ADD";
   }
 
@@ -342,22 +366,18 @@
     else { alert("Failed to remove: " + error.message); }
   }
 
-  /* --- GALLERY & IMAGES --- */
   function renderGallery() {
     const urls = roomData.image_urls || [];
     const mainImg = document.getElementById("mainRoomImage");
     const thumbRow = document.getElementById("thumbnailRow");
     thumbRow.innerHTML = "";
-
     if (urls.length === 0) {
       mainImg.src = "https://via.placeholder.com/800x800?text=No+Images";
       return;
     }
-
     document.getElementById("prevBtn").style.display = urls.length > 1 ? "flex" : "none";
     document.getElementById("nextBtn").style.display = urls.length > 1 ? "flex" : "none";
     mainImg.src = urls[currentImageIndex];
-
     urls.forEach((url, i) => {
       const wrapper = document.createElement("div");
       wrapper.className = "thumb-wrapper";
@@ -389,7 +409,6 @@
     const files = Array.from(e.target.files);
     const btn = document.getElementById("uploadPhotosBtn");
     btn.innerText = "UPLOADING...";
-    
     const newUrls = Array.isArray(roomData.image_urls) ? [...roomData.image_urls] : [];
     for (let f of files) {
       const path = `${currentUser.id}/${Date.now()}-${f.name}`;
@@ -399,7 +418,6 @@
         newUrls.push(pUrl.publicUrl);
       }
     }
-    
     const { error } = await supabaseClient.from("hostels").update({ image_urls: newUrls }).eq("id", currentRoomId);
     if(!error) { roomData.image_urls = newUrls; renderGallery(); }
     else { alert("Photo upload failed: " + error.message); }
@@ -410,14 +428,10 @@
     if(!confirm("Delete this photo?")) return;
     const newUrls = roomData.image_urls.filter((_, i) => i !== index);
     const { error } = await supabaseClient.from("hostels").update({ image_urls: newUrls }).eq("id", currentRoomId);
-    if(!error) { 
-        roomData.image_urls = newUrls; 
-        currentImageIndex = 0;
-        renderGallery(); 
-    } else { alert("Failed to delete photo: " + error.message); }
+    if(!error) { roomData.image_urls = newUrls; currentImageIndex = 0; renderGallery(); }
+    else { alert("Failed to delete photo: " + error.message); }
   }
 
-  /* --- GENERAL EDITING --- */
   function startEdit(fieldId) {
     document.getElementById(fieldId + "Display").style.display = "none";
     document.getElementById(fieldId + "Edit").style.display = "block";
@@ -433,15 +447,9 @@
   async function saveEdit(dbField, fieldId) {
     const newValue = document.getElementById(fieldId + "Input").value.trim();
     if(!newValue && dbField !== 'sharing_type') return alert("Field cannot be empty");
-    
     const { error } = await supabaseClient.from("hostels").update({ [dbField]: newValue }).eq("id", currentRoomId);
-    if (!error) { 
-        roomData[dbField] = newValue; 
-        updateUI(); 
-        cancelEdit(fieldId); 
-    } else {
-        alert("Save failed: " + error.message);
-    }
+    if (!error) { roomData[dbField] = newValue; updateUI(); cancelEdit(fieldId); }
+    else { alert("Save failed: " + error.message); }
   }
 
   async function deleteRoom() {
