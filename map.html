@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>3D Live Map | Hostel Mart</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root { --accent: #2563eb; --card: #ffffff; --text: #0f172a; }
+    body.dark-mode { --card: #1e293b; --text: #f8fafc; }
+    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #0f172a; }
+    #map { height: 100vh; width: 100vw; }
+
+    .leaflet-popup-content-wrapper { background: transparent !important; box-shadow: none !important; padding: 0 !important; }
+    .leaflet-popup-tip-container { display: none; }
+
+    .levitation-container {
+      display: flex; flex-direction: column; align-items: center; width: 280px;
+      animation: hoverFloating 3.5s ease-in-out infinite;
+      filter: drop-shadow(0 25px 50px rgba(0,0,0,0.7)); cursor: pointer;
+    }
+
+    model-viewer { width: 280px; height: 280px; background: transparent; outline: none; }
+
+    .model-info-label {
+      background: var(--card); color: var(--text); padding: 14px 22px; border-radius: 18px;
+      text-align: center; width: 80%; margin-top: -45px; border: 1px solid rgba(255,255,255,0.1);
+      font-family: 'Outfit', sans-serif; box-shadow: 0 15px 30px rgba(0,0,0,0.3); z-index: 10;
+    }
+
+    @keyframes hoverFloating {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-40px); }
+    }
+
+    .back-btn {
+      position: absolute; top: 20px; left: 20px; z-index: 1000;
+      background: white; padding: 12px 24px; border-radius: 50px;
+      text-decoration: none; color: #0f172a; font-weight: 800;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4); font-family: 'Outfit';
+    }
+  </style>
+</head>
+<body class="dark-mode">
+
+<a href="hostel.html" class="back-btn">← BACK TO FINDER</a>
+<div id="map"></div>
+
+<script>
+  const SUPABASE_URL = "https://uluwxacapyysyuwpmqtz.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdXd4YWNhcHl5c3l1d3BtcXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODc0ODQsImV4cCI6MjA4NzI2MzQ4NH0.8dOeocJ5Q2tKy6gDu7rAmWgQqv_oetEXSGH2kWljZJo";
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  let map;
+
+  function initMap(lat, lon) {
+    map = L.map('map', { zoomControl: false }).setView([lat, lon], 14);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+    fetchAllHostels(lat, lon);
+  }
+
+  // Geocoding helper with a small delay to avoid rate limits
+  async function getCoordinates(address) {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
+      const data = await response.json();
+      if (data && data.length > 0) {
+        return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+      }
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  async function fetchAllHostels(userLat, userLon) {
+    const { data: hostels, error } = await supabaseClient.from('hostels').select('*');
+    if (error) {
+        console.error("Supabase Error:", error);
+        return;
+    }
+
+    console.log("Found Hostels in DB:", hostels.length);
+
+    for (const h of hostels) {
+      let coords = await getCoordinates(h.location);
+      
+      // FALLBACK: If geocoding fails, place it near the user with a slight random offset
+      if (!coords) {
+        console.warn(`Could not find coordinates for: ${h.location}. Using fallback.`);
+        coords = [userLat + (Math.random() - 0.5) * 0.01, userLon + (Math.random() - 0.5) * 0.01];
+      }
+
+      const marker = L.circleMarker(coords, {
+        radius: 12, fillColor: "#2563eb", color: "#ffffff", weight: 3, fillOpacity: 1
+      }).addTo(map);
+
+      // Point to car.GLB or default
+      const modelUrl = "car.GLB"; 
+
+      const popupContent = `
+        <div class="levitation-container" onclick="localStorage.setItem('item_id', '${h.id}'); window.location.href='room.html'">
+          <model-viewer 
+            src="${modelUrl}" 
+            autoplay shadow-intensity="2" 
+            camera-controls disable-zoom auto-rotate>
+          </model-viewer>
+          <div class="model-info-label">
+            <div style="font-size:18px; font-weight:800;">${h.hostel_name}</div>
+            <div style="font-size:14px; color:#10b981; font-weight:700; margin-top:4px;">₹${h.rent}/mo</div>
+            <div style="font-size:9px; opacity:0.5; margin-top:8px;">CLICK FOR DETAILS</div>
+          </div>
+        </div>
+      `;
+
+      marker.bindPopup(popupContent, { maxWidth: 400 });
+    }
+  }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => initMap(pos.coords.latitude, pos.coords.longitude),
+      () => initMap(10.0159, 76.3419)
+    );
+  } else {
+    initMap(10.0159, 76.3419);
+  }
+</script>
+</body>
+</html>

@@ -32,7 +32,6 @@
     body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); margin: 0; transition: background 0.3s ease; }
     .logo-font { font-family: 'Outfit', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px; }
 
-    /* --- PREMIUM HEADER --- */
     header { padding: 14px 5%; background: var(--card); display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 0 var(--divider); position: sticky; top: 0; z-index: 100; }
     .header-left { display: flex; align-items: center; gap: 12px; }
     
@@ -45,7 +44,6 @@
     
     .icon-svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 
-    /* --- BUTTONS --- */
     .btn { 
       padding: 10px 22px; border-radius: 8px; border: 1.5px solid var(--btn-border); background: transparent; color: var(--btn-text); 
       font-weight: 600; font-size: 13px; text-decoration: none; transition: 0.3s; display: inline-block; cursor: pointer; text-align: center;
@@ -57,7 +55,6 @@
 
     .container { max-width: 1200px; margin: 40px auto; padding: 0 5%; }
     
-    /* --- SEARCH BAR --- */
     .search-section { margin-bottom: 50px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
     .search-container { position: relative; width: 100%; max-width: 600px; }
     .search-container input { 
@@ -67,7 +64,6 @@
     .search-container input:focus { border-color: var(--btn-border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
     .search-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
     
-    /* --- GRID & CARDS --- */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
     .hostel-card { 
       background: var(--card); border-radius: 20px; overflow: hidden; border: 1px solid var(--divider); 
@@ -80,21 +76,13 @@
     .img-container { position: relative; width: 100%; height: 180px; overflow: hidden; }
     .card-img { width: 100%; height: 100%; object-fit: cover; background: var(--divider); cursor: pointer; }
     
-    /* --- FIXED LOCATION BADGE --- */
     .location-badge { 
-      position: absolute; 
-      top: 12px; 
-      right: 12px; 
+      position: absolute; top: 12px; right: 12px; 
       background: rgba(255, 255, 255, 0.95); 
-      padding: 4px 12px; 
-      border-radius: 50px; 
-      font-size: 10px; 
-      font-weight: 700; 
-      color: #0f172a;
-      z-index: 10; 
-      display: inline-flex;
-      align-items: center; 
-      gap: 5px;
+      padding: 4px 12px; border-radius: 50px; 
+      font-size: 10px; font-weight: 700; color: #0f172a;
+      z-index: 10; display: inline-flex;
+      align-items: center; gap: 5px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       border: 1px solid var(--divider);
       white-space: nowrap;
@@ -114,32 +102,21 @@
       padding: 3px 8px; border-radius: 6px; margin: 2px; font-weight: 600; font-family: 'Outfit';
     }
 
-    /* --- SKELETON ANIMATION --- */
-    @keyframes shimmer { 
-      0% { background-position: -200% 0; } 
-      100% { background-position: 200% 0; } 
-    }
-    
-    .skeleton { 
-      background: var(--skeleton-shimmer); 
-      background-size: 200% 100%; 
-      animation: shimmer 1.5s infinite linear; 
-    }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    .skeleton { background: var(--skeleton-shimmer); background-size: 200% 100%; animation: shimmer 1.5s infinite linear; }
     .skeleton-img { height: 180px; width: 100%; border-radius: 0; }
     .skeleton-text { height: 12px; border-radius: 4px; background: var(--skeleton-bg); margin-bottom: 10px; }
 
-    /* --- MODAL --- */
     .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(10px); }
     .modal-overlay.active { display: flex; }
     .modal { background: var(--card); width: 95%; max-width: 600px; padding: 40px; border-radius: 30px; position: relative; max-height: 90vh; overflow-y: auto; border: 1px solid var(--divider); }
     .close-modal { position: absolute; top: 25px; right: 25px; cursor: pointer; font-size: 22px; color: var(--text-muted); transition: 0.2s; }
     .form-group { margin-bottom: 22px; }
     label { display: block; font-size: 11px; font-weight: 800; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
-    input, select, textarea { width: 100%; padding: 14px 18px; border: 1.5 solid var(--divider); border-radius: 12px; background: var(--bg); color: var(--text); box-sizing: border-box; font-family: inherit; transition: 0.3s; outline: none; }
+    input, select, textarea { width: 100%; padding: 14px 18px; border: 1.5px solid var(--divider); border-radius: 12px; background: var(--bg); color: var(--text); box-sizing: border-box; font-family: inherit; transition: 0.3s; outline: none; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
     .nearby-item-badge { display: flex; justify-content: space-between; align-items: center; background: var(--profile-bg); padding: 10px 15px; border-radius: 10px; margin-bottom: 8px; font-size: 13px; font-weight: 600; border: 1px solid var(--divider); }
-
     .preview-container { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; }
     .preview-wrapper { width: 70px; height: 70px; border-radius: 12px; overflow: hidden; border: 1px solid var(--divider); }
     .preview-img { width: 100%; height: 100%; object-fit: cover; }
@@ -199,7 +176,14 @@
       <div class="form-group"><label>Gender</label><select id="hType"><option value="Men">Men</option><option value="Women">Women</option><option value="Unisex">Unisex</option></select></div>
       <div class="form-group"><label>Vacating Date</label><input type="date" id="hDate"></div>
     </div>
-    <div class="form-group"><label>Location</label><input id="hLoc" placeholder="Area, Landmark, or City"></div>
+    
+    <div class="form-group">
+        <label>Location</label>
+        <div style="display: flex; gap: 8px;">
+            <input id="hLoc" placeholder="Area, Landmark, or City" style="flex: 2;">
+            <button type="button" class="btn btn-secondary btn-sm" id="gpsBtn" onclick="getCurrentGPS()" style="flex: 1; white-space: nowrap; font-size: 10px;">📍 AUTO-LOCATE</button>
+        </div>
+    </div>
 
     <div class="form-group">
         <label>Nearest Institutions</label>
@@ -238,6 +222,7 @@
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   let currentUser = null, selectedFiles = [], allHostels = [], nearbyInstitutes = [];
+  let hostelCoords = { lat: null, lon: null };
 
   async function checkAuth() {
     const { data } = await supabaseClient.auth.getSession();
@@ -250,14 +235,39 @@
     loadHostels();
   }
 
+  // NEW FUNCTION: Fetch GPS coordinates from phone
+  async function getCurrentGPS() {
+    const btn = document.getElementById('gpsBtn');
+    btn.innerText = "⌛...";
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            hostelCoords.lat = pos.coords.latitude;
+            hostelCoords.lon = pos.coords.longitude;
+            
+            // Auto-fill location name from coordinates
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${hostelCoords.lat}&lon=${hostelCoords.lon}`);
+                const data = await res.json();
+                const area = data.address.suburb || data.address.neighbourhood || data.address.city || "";
+                if(area) document.getElementById('hLoc').value = area;
+            } catch(e) {}
+            
+            btn.innerText = "✅ SAVED";
+            btn.style.color = "#10b981";
+            btn.style.borderColor = "#10b981";
+        }, (err) => {
+            alert("Location access denied. Please enable it in settings.");
+            btn.innerText = "❌ FAILED";
+        });
+    }
+  }
+
   function addInstitution() {
     const name = document.getElementById('instName').value.trim();
     const dist = document.getElementById('instDist').value.trim();
     if (!name || !dist) return alert("Fill name and distance");
-    
     nearbyInstitutes.push({ name, dist });
-    document.getElementById('instName').value = "";
-    document.getElementById('instDist').value = "";
+    document.getElementById('instName').value = ""; document.getElementById('instDist').value = "";
     renderModalInstitutions();
   }
 
@@ -279,8 +289,7 @@
   function filterHostels() {
     const query = document.getElementById('hostelSearch').value.toLowerCase();
     const filtered = allHostels.filter(h => 
-      h.hostel_name.toLowerCase().includes(query) || 
-      h.location.toLowerCase().includes(query) ||
+      h.hostel_name.toLowerCase().includes(query) || h.location.toLowerCase().includes(query) ||
       h.nearby_institutions?.some(inst => inst.name.toLowerCase().includes(query))
     );
     renderHostels(filtered);
@@ -291,13 +300,8 @@
     grid.innerHTML = list.length ? "" : "<p style='grid-column:1/-1; text-align:center; padding:50px; opacity:0.5;'>No rooms found.</p>";
     list.forEach(h => {
       const date = new Date(h.vacating_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      let tags = "";
-      if (h.nearby_institutions && Array.isArray(h.nearby_institutions)) {
-          tags = h.nearby_institutions.slice(0, 2).map(i => `<span class="nearby-tag">🎓 ${i.name}</span>`).join('');
-      }
-
+      let tags = h.nearby_institutions?.slice(0, 2).map(i => `<span class="nearby-tag">🎓 ${i.name}</span>`).join('') || "";
       const isOwner = currentUser && h.user_id === currentUser.id;
-
       const div = document.createElement('div');
       div.className = 'hostel-card';
       div.innerHTML = `
@@ -332,21 +336,15 @@
   function openModal() { if(!currentUser) return alert("Log in first"); document.getElementById('modalOverlay').classList.add('active'); }
   function closeModal() { 
       document.getElementById('modalOverlay').classList.remove('active');
-      nearbyInstitutes = []; 
-      selectedFiles = [];
-      document.getElementById('previewContainer').innerHTML = "";
-      renderModalInstitutions();
+      nearbyInstitutes = []; selectedFiles = []; document.getElementById('previewContainer').innerHTML = ""; renderModalInstitutions();
+      hostelCoords = { lat: null, lon: null }; 
+      document.getElementById('gpsBtn').innerText = "📍 AUTO-LOCATE";
   }
 
   function handleFileSelect(e) { 
       const files = Array.from(e.target.files);
-      if (files.length > 10) {
-          alert("Maximum 10 images allowed.");
-          e.target.value = "";
-          return;
-      }
-      selectedFiles = files; 
-      renderPreviews(); 
+      if (files.length > 10) { alert("Max 10 images."); return; }
+      selectedFiles = files; renderPreviews(); 
   }
 
   function renderPreviews() {
@@ -355,10 +353,7 @@
   }
 
   async function submitHostel() {
-    if (!document.getElementById('hName').value || !document.getElementById('hLoc').value) {
-        return alert("Please fill at least the name and location.");
-    }
-
+    if (!document.getElementById('hName').value || !document.getElementById('hLoc').value) return alert("Fill name and location.");
     const btn = document.getElementById('submitBtn'); btn.disabled = true; btn.innerText = "PUBLISHING...";
     const urls = [];
     for (let f of selectedFiles) {
@@ -367,10 +362,13 @@
       if(data) { const { data: pUrl } = supabaseClient.storage.from('item-images').getPublicUrl(path); urls.push(pUrl.publicUrl); }
     }
     
+    // UPDATED: Including latitude and longitude in the insert
     await supabaseClient.from('hostels').insert([{
       user_id: currentUser.id, 
       hostel_name: document.getElementById('hName').value,
       location: document.getElementById('hLoc').value, 
+      latitude: hostelCoords.lat,   // Saved GPS Lat
+      longitude: hostelCoords.lon,  // Saved GPS Lon
       gender_type: document.getElementById('hType').value,
       food_status: document.getElementById('hFood').value, 
       rent: document.getElementById('hRent').value,
