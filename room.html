@@ -60,6 +60,27 @@
     .btn-danger:hover { background: var(--danger); color: white; }
     .btn-sm { padding: 8px 14px; font-size: 11px; }
 
+    /* --- PULSING MAP BUTTON EFFECT --- */
+    .btn-map {
+      background: var(--accent) !important;
+      color: white !important;
+      border: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
+      animation: pulseBlue 2s infinite;
+    }
+
+    @keyframes pulseBlue {
+      0% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(37, 99, 235, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0); }
+    }
+
     .product-container { max-width: 1200px; margin: 40px auto; padding: 0 5%; display: grid; grid-template-columns: 1.1fr 1fr; gap: 60px; }
     
     .gallery-container { display: flex; flex-direction: column; gap: 16px; }
@@ -201,6 +222,13 @@
       <span class="badge badge-food" id="foodBadge">Food: --</span>
     </div>
 
+    <div style="margin: 25px 0;">
+        <button class="btn btn-sm btn-map" style="width: 100%;" onclick="viewOnMap()">
+            <svg class="icon-svg" style="stroke: white;" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            VIEW IN 3D MAP
+        </button>
+    </div>
+
     <div class="editable-group">
         <div class="price">₹<span id="roomRentDisplay">0</span><span style="font-size: 14px; opacity: 0.6; font-weight: 500;">/month</span></div>
         <svg class="edit-icon" id="editIconRent" onclick="startEdit('roomRent')" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
@@ -291,7 +319,6 @@
 
     updateUI();
 
-    // Owner validation
     if (currentUser && currentUser.id === data.user_id) {
       document.querySelectorAll(".edit-icon").forEach(el => el.style.display = "inline-block");
       document.getElementById("deleteBtn").style.display = "block";
@@ -304,7 +331,6 @@
     document.getElementById("roomTitleDisplay").innerText = roomData.hostel_name;
     document.getElementById("roomRentDisplay").innerText = roomData.rent;
     document.getElementById("roomLocationDisplay").innerText = roomData.location;
-    // Map database 'sharing_type' to UI Description
     document.getElementById("roomDescriptionDisplay").innerText = roomData.sharing_type || "No extra details provided.";
     document.getElementById("phoneNumber").innerText = roomData.contact_number;
     document.getElementById("vacatingBadge").innerText = "Available: " + new Date(roomData.vacating_date).toLocaleDateString();
@@ -312,6 +338,15 @@
     
     renderInstitutions();
     renderGallery();
+  }
+
+  // --- REDIRECT TO MAP WITH COORDINATES ---
+  function viewOnMap() {
+    if (!roomData.latitude || !roomData.longitude) {
+      alert("GPS Coordinates not found for this room.");
+      return;
+    }
+    window.location.href = `map.html?lat=${roomData.latitude}&lon=${roomData.longitude}&focus=${roomData.id}`;
   }
 
   function renderInstitutions() {
@@ -456,7 +491,6 @@
     const newValue = document.getElementById(fieldId + "Input").value.trim();
     if(!newValue && dbField !== 'sharing_type') return alert("Field cannot be empty");
     
-    // UI Feedback for Save
     const saveBtn = document.querySelector(`#${fieldId}Edit .btn`);
     const originalText = saveBtn.innerText;
     saveBtn.innerText = "⏳";

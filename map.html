@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="global.js" defer></script>
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800&display=swap" rel="stylesheet">
 
@@ -17,45 +18,84 @@
     body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #0f172a; }
     #map { height: 100vh; width: 100vw; z-index: 1; }
 
-    /* --- MOBILE 3D POPUP STYLING --- */
+    /* --- SEARCH UI OVERLAY --- */
+    .search-overlay {
+      position: absolute; top: 15px; left: 15px; right: 15px; 
+      z-index: 1000; display: flex; flex-direction: column; gap: 10px;
+      pointer-events: none;
+    }
+    .search-row { display: flex; gap: 10px; pointer-events: auto; }
+    
+    .back-btn {
+      background: white; padding: 12px; border-radius: 12px;
+      text-decoration: none; color: #0f172a; display: flex; align-items: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: 0.3s;
+    }
+
+    .map-search-input {
+      flex: 1; padding: 12px 15px; border-radius: 12px; border: none;
+      background: white; color: #0f172a; font-family: 'Outfit';
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2); outline: none;
+    }
+
+    .near-me-fab {
+      position: absolute; bottom: 30px; right: 20px; z-index: 1000;
+      background: #2563eb; color: white; width: 50px; height: 50px;
+      border-radius: 50%; border: none; display: flex; align-items: center;
+      justify-content: center; box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+      cursor: pointer; pointer-events: auto;
+    }
+
+    /* --- SHARED PIN STYLING --- */
+    .custom-pin-container { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+    .user-label {
+      background: #2563eb; color: white; padding: 4px 12px; border-radius: 50px;
+      font-size: 10px; font-weight: 800; font-family: 'Outfit'; white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .blue-pin { width: 14px; height: 14px; background: #2563eb; border: 2px solid white; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+    .pin-label {
+      background: #ef4444; color: white; padding: 4px 10px; border-radius: 6px;
+      font-size: 11px; font-weight: 800; font-family: 'Outfit'; white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3); margin-bottom: 4px; border: 1px solid rgba(255,255,255,0.2);
+    }
+    .red-pin { width: 14px; height: 14px; background: #ef4444; border: 2px solid white; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+
+    /* --- 3D POPUP STYLING --- */
     .leaflet-popup-content-wrapper { background: transparent !important; box-shadow: none !important; padding: 0 !important; }
     .leaflet-popup-tip-container { display: none; }
-
     .levitation-container {
       display: flex; flex-direction: column; align-items: center; width: 260px;
       animation: hoverFloating 3.5s ease-in-out infinite;
-      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6)); cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
+      filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6));
     }
-
-    model-viewer { 
-      width: 260px; height: 240px; 
-      background: transparent; outline: none; 
-      pointer-events: auto; /* Allow touch rotation of the model */
-    }
-
+    model-viewer { width: 260px; height: 240px; background: transparent; outline: none; }
     .model-info-label {
       background: var(--card); color: var(--text); padding: 12px 20px; border-radius: 18px;
       text-align: center; width: 85%; margin-top: -35px; border: 1px solid rgba(255,255,255,0.1);
       font-family: 'Outfit', sans-serif; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 10;
+      cursor: pointer;
     }
-
-    @keyframes hoverFloating {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-30px); }
-    }
-
-    .back-btn {
-      position: absolute; top: 15px; left: 15px; z-index: 1000;
-      background: white; padding: 10px 20px; border-radius: 50px;
-      text-decoration: none; color: #0f172a; font-weight: 800; font-size: 14px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3); font-family: 'Outfit';
-    }
+    @keyframes hoverFloating { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
   </style>
 </head>
 <body class="dark-mode">
 
-<a href="hostel.html" class="back-btn">← BACK</a>
+<div class="search-overlay">
+  <div class="search-row">
+    <a href="hostel.html" class="back-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    </a>
+    <input type="text" id="mapSearch" class="map-search-input" placeholder="Search hostel or location..." oninput="handleSearch()">
+  </div>
+</div>
+
+<button class="near-me-fab" onclick="recenterToUser()" title="Find Me">
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+</button>
+
 <div id="map"></div>
 
 <script>
@@ -63,55 +103,125 @@
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdXd4YWNhcHl5c3l1d3BtcXR6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE2ODc0ODQsImV4cCI6MjA4NzI2MzQ4NH0.8dOeocJ5Q2tKy6gDu7rAmWgQqv_oetEXSGH2kWljZJo";
   const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  let map;
+  let map, allHostels = [], markerLayer = L.layerGroup(), userMarker = null;
 
-  function initMap(lat, lon) {
-    // Zoom in a bit more for mobile (level 16)
-    map = L.map('map', { zoomControl: false }).setView([lat, lon], 16);
-    
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+  async function startApp() {
+    const params = new URLSearchParams(window.location.search);
+    const urlLat = parseFloat(params.get('lat'));
+    const urlLon = parseFloat(params.get('lon'));
+    const focusId = params.get('focus');
 
-    // Current Location Marker (Green Dot)
-    L.circleMarker([lat, lon], {
-      radius: 7, fillColor: "#10b981", color: "#fff", weight: 2, fillOpacity: 1
-    }).addTo(map);
+    if (!isNaN(urlLat) && !isNaN(urlLon)) {
+      initMap(urlLat, urlLon, 18, false);
+      if (focusId) {
+        setTimeout(() => autoOpenHostel(focusId), 1200);
+      }
+      return; 
+    }
 
-    fetchAllHostels();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => initMap(pos.coords.latitude, pos.coords.longitude, 16, true),
+        () => initMap(10.0159, 76.3419, 14, false),
+        { enableHighAccuracy: true }
+      );
+    } else {
+      initMap(10.0159, 76.3419, 14, false);
+    }
   }
 
-  async function fetchAllHostels() {
-    const { data: hostels, error } = await supabaseClient.from('hostels').select('*');
-    if (error) return console.error(error);
+  function initMap(lat, lon, zoom, showUser) {
+    if (map) return;
+    map = L.map('map', { zoomControl: false }).setView([lat, lon], zoom);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+    markerLayer.addTo(map);
 
-    hostels.forEach(h => {
-      // Priority 1: Use Precise GPS Coords from DB
-      const lat = h.latitude;
-      const lon = h.longitude;
+    if (showUser) createUserMarker(lat, lon);
 
-      if (lat && lon) {
-        const marker = L.circleMarker([lat, lon], {
-          radius: 10, fillColor: "#2563eb", color: "#ffffff", weight: 2, fillOpacity: 1
-        }).addTo(map);
+    // --- INSTANT ZOOM WATCHER ---
+    // Changed 'zoomend' to 'zoom' for zero-delay closing
+    map.on('zoom', function() {
+        if (map.getZoom() < 16.5) { // Vanishes as soon as you zoom out slightly from 18
+            map.closePopup();
+        }
+    });
+
+    fetchHostels();
+  }
+
+  function createUserMarker(lat, lon) {
+    const userIcon = L.divIcon({
+      className: 'u-pin',
+      html: `<div class="custom-pin-container"><div class="user-label">You are here</div><div class="blue-pin"></div></div>`,
+      iconSize: [100, 40], iconAnchor: [50, 40]
+    });
+    if (userMarker) userMarker.setLatLng([lat, lon]);
+    else userMarker = L.marker([lat, lon], { icon: userIcon }).addTo(map);
+  }
+
+  async function fetchHostels() {
+    const { data } = await supabaseClient.from('hostels').select('*');
+    allHostels = data || [];
+    renderMarkers(allHostels);
+  }
+
+  function renderMarkers(list) {
+    markerLayer.clearLayers();
+    list.forEach(h => {
+      if (h.latitude && h.longitude) {
+        const customIcon = L.divIcon({
+          className: 'h-pin',
+          html: `<div class="custom-pin-container"><div class="pin-label">${h.hostel_name}</div><div class="red-pin"></div></div>`,
+          iconSize: [100, 40],
+          iconAnchor: [50, 40]
+        });
+
+        const marker = L.marker([h.latitude, h.longitude], { icon: customIcon });
+        marker.hostelId = h.id;
 
         const popupContent = `
-          <div class="levitation-container" onclick="openDetails('${h.id}')">
-            <model-viewer 
-              src="car.GLB" 
-              autoplay shadow-intensity="1" 
-              camera-controls touch-action="pan-y"
-              disable-zoom auto-rotate>
-            </model-viewer>
-            <div class="model-info-label">
+          <div class="levitation-container">
+            <model-viewer src="car.GLB" autoplay shadow-intensity="1" camera-controls touch-action="pan-y" disable-zoom auto-rotate></model-viewer>
+            <div class="model-info-label" onclick="openDetails('${h.id}')">
               <div style="font-size:16px; font-weight:800;">${h.hostel_name}</div>
               <div style="font-size:13px; color:#10b981; font-weight:700;">₹${h.rent}/mo</div>
               <div style="font-size:9px; opacity:0.6; margin-top:5px;">TAP TO VIEW</div>
             </div>
-          </div>
-        `;
-
-        marker.bindPopup(popupContent, { maxWidth: 300 });
+          </div>`;
+        
+        marker.bindPopup(popupContent, { maxWidth: 300, offset: [0, -30] });
+        markerLayer.addLayer(marker);
       }
     });
+  }
+
+  function autoOpenHostel(id) {
+    markerLayer.eachLayer((marker) => {
+      if (marker.hostelId === id) {
+        marker.openPopup();
+      }
+    });
+  }
+
+  function handleSearch() {
+    const query = document.getElementById('mapSearch').value.toLowerCase();
+    if (!query) return;
+    const match = allHostels.find(h => h.hostel_name.toLowerCase().includes(query) || (h.location && h.location.toLowerCase().includes(query)));
+    if (match) {
+      map.flyTo([match.latitude, match.longitude], 17);
+      setTimeout(() => autoOpenHostel(match.id), 1000);
+    }
+  }
+
+  function recenterToUser() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        map.flyTo([lat, lon], 16);
+        createUserMarker(lat, lon);
+      }, null, { enableHighAccuracy: true });
+    }
   }
 
   function openDetails(id) {
@@ -119,16 +229,7 @@
     window.location.href = 'room.html';
   }
 
-  // Use High Accuracy for phone GPS
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => initMap(pos.coords.latitude, pos.coords.longitude),
-      () => initMap(10.0159, 76.3419), // Fallback Kochi
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  } else {
-    initMap(10.0159, 76.3419);
-  }
+  startApp();
 </script>
 </body>
 </html>
